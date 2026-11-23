@@ -1,33 +1,5 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <!--pra usar no celular-->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Usuários · Reserva de Salas</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-
-  <header class="cabecalho">
-    <a class="marca" href="painel.html"> PUC-RJ <span>Reserva de Salas</span></a>
-    <div class="usuario">
-      Zezinho (Administrador)
-      <a href="index.html">Sair</a>
-    </div>
-  </header>
-
-  <nav class="menu">
-    <a href="painel.html">Início</a>
-    <a href="reservar.html">Reservar sala</a>
-    <a href="minhas-reservas.html">Minhas reservas</a>
-    <a href="salas.html">Salas</a>
-    <a href="atendimento.html">Atendimento</a>
-    <a href="bloqueios.html" class="ativo">Bloqueios</a>
-    <a href="usuarios.html">Usuários</a>
-    <a href="relatorios.html">Relatórios</a>
-  </nav>
-
+{% extends "layout.html" %}
+{% block content %}
   <!-- conteudo da pagina -->
   <main class="conteudo">
 
@@ -40,7 +12,7 @@
 
     <section class="cartao">
       <h2>Criar bloqueio</h2>
-      <form action="bloqueios.html" method="get">
+      <form action="{{ url_for('bloqueios') }}" method="get">
         <label for="sala">Sala</label>
         <select id="sala" name="sala" required>
           <option>F305</option>
@@ -89,7 +61,7 @@
               <td>28/11/2026 22:00</td>
               <td>Troca do projetor</td>
               <td><span class="situacao ativo">ATIVO</span></td>
-              <td><a class="botao secundario pequeno" href="bloqueios.html">Retirar bloqueio</a></td>
+              <td><a class="botao secundario pequeno" href="{{ url_for('bloqueios') }}">Retirar bloqueio</a></td>
             </tr>
             <tr>
               <td>L101</td>
@@ -104,10 +76,4 @@
       </div>
     </section>
   </main>
-
-  <footer class="rodape">
-    INF1040 - Projeto de Programação Modular | Grupo 7 | 2026.2
-  </footer>
-
-</body>
-</html>
+{% endblock %}

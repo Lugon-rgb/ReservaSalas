@@ -1,33 +1,5 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <!--pra usar no celular-->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Salas · Reserva de Salas</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-
-  <header class="cabecalho">
-    <a class="marca" href="painel.html"> PUC-RJ <span>Reserva de Salas</span></a>
-    <div class="usuario">
-      Zezinho (Administrador)
-      <a href="index.html">Sair</a>
-    </div>
-  </header>
-
-  <nav class="menu">
-    <a href="painel.html">Início</a>
-    <a href="reservar.html">Reservar sala</a>
-    <a href="minhas-reservas.html">Minhas reservas</a>
-    <a href="salas.html" class="ativo">Salas</a>
-    <a href="atendimento.html">Atendimento</a>
-    <a href="bloqueios.html">Bloqueios</a>
-    <a href="usuarios.html">Usuários</a>
-    <a href="relatorios.html">Relatórios</a>
-  </nav>
-
+{% extends "layout.html" %}
+{% block content %}
   <!-- conteudo da pagina -->
   <main class="conteudo">
 
@@ -36,7 +8,7 @@
     <section class="cartao">
       <h2>Salas cadastradas</h2>
           <!-- filtro -->
-          <form action="salas.html" method="get" class="linha">
+          <form action="{{ url_for('salas') }}" method="get" class="linha">
             <div>
               <label for="filtro-edificio">Edifício</label>
               <select id="filtro-edificio" name="filtro-edificio">
@@ -84,7 +56,7 @@
 
     <section class="cartao">
       <h2>Cadastrar nova sala</h2>
-      <form action="salas.html" method="get">
+      <form action="{{ url_for('salas') }}" method="get">
         <div class="linha">
           <div>
             <label for="codigo">Código</label>
@@ -151,7 +123,7 @@
         </table>
       </div>
 
-      <form action="salas.html" method="get" style="margin-top: 16px;">
+      <form action="{{ url_for('salas') }}" method="get" style="margin-top: 16px;">
         <label for="nome-edificio">Novo edifício</label>
         <input type="text" id="nome-edificio" name="nome-edificio" placeholder="Ex.: Edifício Cardeal Leme" required>
                 <!-- negativo é subsolo, 0 terreo -->
@@ -169,10 +141,4 @@
       </form>
     </section>
   </main>
-
-  <footer class="rodape">
-    INF1040 - Projeto de Programação Modular | Grupo 7 | 2026.2
-  </footer>
-
-</body>
-</html>
+{% endblock %}

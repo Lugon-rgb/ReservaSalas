@@ -1,33 +1,5 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <!--pra usar no celular-->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Usuários · Reserva de Salas</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-
-  <header class="cabecalho">
-    <a class="marca" href="painel.html"> PUC-RJ <span>Reserva de Salas</span></a>
-    <div class="usuario">
-      Zezinho (Administrador)
-      <a href="index.html">Sair</a>
-    </div>
-  </header>
-
-  <nav class="menu">
-    <a href="painel.html">Início</a>
-    <a href="reservar.html">Reservar sala</a>
-    <a href="minhas-reservas.html">Minhas reservas</a>
-    <a href="salas.html">Salas</a>
-    <a href="atendimento.html">Atendimento</a>
-    <a href="bloqueios.html">Bloqueios</a>
-    <a href="usuarios.html" class="ativo">Usuários</a>
-    <a href="relatorios.html">Relatórios</a>
-  </nav>
-
+{% extends "layout.html" %}
+{% block content %}
   <!-- conteudo da pagina -->
   <main class="conteudo">
 
@@ -35,7 +7,7 @@
 
     <section class="cartao">
       <h2>Cadastrar usuário</h2>
-      <form action="usuarios.html" method="get">
+      <form action="{{ url_for('usuarios') }}" method="get">
         <div class="linha">
           <div>
             <label for="matricula">Matrícula</label>
@@ -67,7 +39,7 @@
       <div class="tabela-rolagem">
 
       <!-- filtro de matricula, nome e perfil -->
-      <form action="usuarios.html" method="get" class="linha">
+      <form action="{{ url_for('usuarios') }}" method="get" class="linha">
         <div>
           <label for="filtro-matricula">Matrícula</label>
           <input type="text" id="filtro-matricula" name="filtro-matricula" placeholder="Digite a matrícula">
@@ -112,10 +84,4 @@
       </div>
     </section>
   </main>
-
-  <footer class="rodape">
-    INF1040 - Projeto de Programação Modular | Grupo 7 | 2026.2
-  </footer>
-
-</body>
-</html>
+{% endblock %}

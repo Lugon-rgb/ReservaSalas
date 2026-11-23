@@ -1,33 +1,5 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <!--pra usar no celular-->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Atendimento - Reserva de Salas</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-
-  <header class="cabecalho">
-    <a class="marca" href="painel.html"> PUC-RJ <span>Reserva de Salas</span></a>
-    <div class="usuario">
-      Zezinho (Administrador)
-      <a href="index.html">Sair</a>
-    </div>
-  </header>
-
-  <nav class="menu">
-    <a href="painel.html">Início</a>
-    <a href="reservar.html">Reservar sala</a>
-    <a href="minhas-reservas.html">Minhas reservas</a>
-    <a href="salas.html">Salas</a>
-    <a href="atendimento.html" class="ativo">Atendimento</a>
-    <a href="bloqueios.html">Bloqueios</a>
-    <a href="usuarios.html">Usuários</a>
-    <a href="relatorios.html">Relatórios</a>
-  </nav>
-
+{% extends "layout.html" %}
+{% block content %}
   <!-- conteudo da pagina -->
   <main class="conteudo">
 
@@ -41,7 +13,7 @@
     <section class="cartao">
       <h2>Reservas de hoje</h2>
       <!-- filtro por data, edificio, andar e sala -->
-      <form action="atendimento.html" method="get" class="linha">
+      <form action="{{ url_for('atendimento') }}" method="get" class="linha">
         <div>
           <label for="data">Data</label>
           <input type="date" id="data" name="data" value="2026-11-24">
@@ -116,7 +88,7 @@
               <td>Diego Alves (2410003)</td>
               <td>4</td>
               <td><span class="situacao em-uso">EM USO</span></td>
-              <td><a class="botao secundario pequeno" href="atendimento.html">Registrar saída</a></td>
+              <td><a class="botao secundario pequeno" href="{{ url_for('atendimento') }}">Registrar saída</a></td>
             </tr>
             <tr>
               <td>10:00 – 11:00</td>
@@ -124,17 +96,11 @@
               <td>Elisa Rocha (2410004)</td>
               <td>2</td>
               <td><span class="situacao confirmada">CONFIRMADA</span></td>
-              <td><a class="botao pequeno" href="atendimento.html">Registrar entrada</a></td>
+              <td><a class="botao pequeno" href="{{ url_for('atendimento') }}">Registrar entrada</a></td>
             </tr>
           </tbody>
         </table>
       </div>
     </section>
   </main>
-
-  <footer class="rodape">
-    INF1040 - Projeto de Programação Modular | Grupo 7 | 2026.2
-  </footer>
-
-</body>
-</html>
+{% endblock %}

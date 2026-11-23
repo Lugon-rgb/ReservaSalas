@@ -1,33 +1,5 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <!--pra usar no celular-->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Salas · Reserva de Salas</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-
-  <header class="cabecalho">
-    <a class="marca" href="painel.html"> PUC-RJ <span>Reserva de Salas</span></a>
-    <div class="usuario">
-      Zezinho (Administrador)
-      <a href="index.html">Sair</a>
-    </div>
-  </header>
-
-  <nav class="menu">
-    <a href="painel.html">Início</a>
-    <a href="reservar.html">Reservar sala</a>
-    <a href="minhas-reservas.html" class="ativo">Minhas reservas</a>
-    <a href="salas.html">Salas</a>
-    <a href="atendimento.html">Atendimento</a>
-    <a href="bloqueios.html">Bloqueios</a>
-    <a href="usuarios.html">Usuários</a>
-    <a href="relatorios.html">Relatórios</a>
-  </nav>
-
+{% extends "layout.html" %}
+{% block content %}
   <!-- conteudo da pagina -->
   <main class="conteudo">
 
@@ -49,7 +21,7 @@
       <p>Só é possível cancelar reservas <strong>confirmadas</strong> e <strong>antes do início</strong>.</p>
 
             <!-- filtro do histórico (F13: filtros por situação e período) -->
-      <form action="minhas-reservas.html" method="get" class="linha">
+      <form action="{{ url_for('minhas_reservas') }}" method="get" class="linha">
         <div>
           <label for="periodo">Mostrar</label>
           <select id="periodo" name="periodo">
@@ -137,7 +109,7 @@
     <!-- motivo é obrigatório (RN06). -->
     <section class="cartao" id="cancelar">
       <h2>Cancelar reserva</h2>
-      <form action="minhas-reservas.html" method="get">
+      <form action="{{ url_for('minhas_reservas') }}" method="get">
         <label for="reserva">Reserva</label>
         <select id="reserva" name="reserva">
           <option>L104 · 25/11/2026 · 10:00 – 11:30</option>
@@ -151,10 +123,4 @@
       </form>
     </section>
   </main>
-
-  <footer class="rodape">
-    INF1040 - Projeto de Programação Modular | Grupo 7 | 2026.2
-  </footer>
-
-</body>
-</html>
+{% endblock %}

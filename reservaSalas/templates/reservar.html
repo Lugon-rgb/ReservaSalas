@@ -1,33 +1,5 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <!--pra usar no celular-->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Salas · Reserva de Salas</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-
-  <header class="cabecalho">
-    <a class="marca" href="painel.html"> PUC-RJ <span>Reserva de Salas</span></a>
-    <div class="usuario">
-      Zezinho (Administrador)
-      <a href="index.html">Sair</a>
-    </div>
-  </header>
-
-  <nav class="menu">
-    <a href="painel.html">Início</a>
-    <a href="reservar.html" class="ativo">Reservar sala</a>
-    <a href="minhas-reservas.html">Minhas reservas</a>
-    <a href="salas.html">Salas</a>
-    <a href="atendimento.html">Atendimento</a>
-    <a href="bloqueios.html">Bloqueios</a>
-    <a href="usuarios.html">Usuários</a>
-    <a href="relatorios.html">Relatórios</a>
-  </nav>
-
+{% extends "layout.html" %}
+{% block content %}
   <!-- conteudo da pagina -->
   <main class="conteudo">
 
@@ -44,7 +16,7 @@
     <section class="cartao">
       <h2>1. Consultar salas disponíveis</h2>
 
-      <form action="reservar.html" method="get">
+      <form action="{{ url_for('reservar') }}" method="get">
         <div class="linha">
           <div>
             <label for="data">Data</label>
@@ -127,21 +99,21 @@
               <td>Edifício Leme, 1º andar</td>
               <td>4 pessoas</td>
               <td>Quadro branco</td>
-              <td><a class="botao pequeno" href="minhas-reservas.html?nova=1">Reservar</a></td>
+              <td><a class="botao pequeno" href="{{ url_for('minhas_reservas') }}?nova=1">Reservar</a></td>
             </tr>
             <tr>
               <td>L104</td>
               <td>Edifício Leme, 1º andar</td>
               <td>6 pessoas</td>
               <td>Quadro branco, TV</td>
-              <td><a class="botao pequeno" href="minhas-reservas.html?nova=1">Reservar</a></td>
+              <td><a class="botao pequeno" href="{{ url_for('minhas_reservas') }}?nova=1">Reservar</a></td>
             </tr>
             <tr>
               <td>K210</td>
               <td>Edifício Kennedy, 2º andar</td>
               <td>8 pessoas</td>
               <td>Quadro branco, Projetor, Computador</td>
-              <td><a class="botao pequeno" href="minhas-reservas.html?nova=1">Reservar</a></td>
+              <td><a class="botao pequeno" href="{{ url_for('minhas_reservas') }}?nova=1">Reservar</a></td>
             </tr>
           </tbody>
         </table>
@@ -153,10 +125,5 @@
       <strong>LIMITE ATINGIDO:</strong> você já tem 2 reservas confirmadas. Cancele uma delas para reservar outra.
     </div>
   </main>
-
-  <footer class="rodape">
-    INF1040 - Projeto de Programação Modular | Grupo 7 | 2026.2
-  </footer>
-
-</body>
-</html>
+{% endblock %
+}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <!--pra usar no celular-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salas · Reserva de Salas</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <header class="cabecalho">
+    <a class="marca" href="{{ url_for('painel') }}"> PUC-RJ <span>Reserva de Salas</span></a>
+    <div class="usuario">
+      Zezinho (Administrador)
+      <a href="{{ url_for('login') }}">Sair</a>
+    </div>
+  </header>
+
+  <nav class="menu">
+    <a href="{{ url_for('painel') }}">Início</a>
+    <a href="{{ url_for('reservar') }}">Reservar sala</a>
+    <a href="{{ url_for('minhas_reservas') }}" class="ativo">Minhas reservas</a>
+    <a href="{{ url_for('salas') }}">Salas</a>
+    <a href="{{ url_for('atendimento') }}">Atendimento</a>
+    <a href="{{ url_for('bloqueios') }}">Bloqueios</a>
+    <a href="{{ url_for('usuarios') }}">Usuários</a>
+    <a href="{{ url_for('relatorios') }}">Relatórios</a>
+  </nav>
+  {% block content %}{% endblock %}
+  <footer class="rodape">
+    INF1040 - Projeto de Programação Modular | Grupo 7 | 2026.2
+  </footer>
+
+</body>
+</html>
