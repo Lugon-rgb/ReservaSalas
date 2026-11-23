@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <!--pra usar no celular-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salas · Reserva de Salas</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="cabecalho">
+    <a class="marca" href="painel.html"> PUC-RJ <span>Reserva de Salas</span></a>
+    <div class="usuario">
+      Zezinho (Administrador)
+      <a href="index.html">Sair</a>
+    </div>
+  </header>
+
+  <nav class="menu">
+    <a href="painel.html">Início</a>
+    <a href="reservar.html">Reservar sala</a>
+    <a href="minhas-reservas.html">Minhas reservas</a>
+    <a href="salas.html" class="ativo">Salas</a>
+    <a href="atendimento.html">Atendimento</a>
+    <a href="bloqueios.html">Bloqueios</a>
+    <a href="usuarios.html">Usuários</a>
+    <a href="relatorios.html">Relatórios</a>
+  </nav>
+
+  <!-- conteudo da pagina -->
+  <main class="conteudo">
+
+    <h1>Salas</h1>
+
+    <section class="cartao">
+      <h2>Salas cadastradas</h2>
+          <!-- filtro -->
+          <form action="salas.html" method="get" class="linha">
+            <div>
+              <label for="filtro-edificio">Edifício</label>
+              <select id="filtro-edificio" name="filtro-edificio">
+                <option value="">Todos</option>
+                <option>Edifício Frings</option>
+                <option>Edifício Kennedy</option>
+                <option>Edifício Leme</option>
+                <option>Rio DataCentro (RDC)</option>
+              </select>
+            </div>
+            <div>
+              <label for="filtro-andar">Andar</label>
+              <select id="filtro-andar" name="filtro-andar">
+                <option value="">Todos</option>
+                <option value="-1">-1 subsolo</option>
+                <option value="0">0 Térreo</option>
+                <option value="1">1º andar</option>
+              </select>
+            </div>
+            <div>
+              <!-- label vazio só para o botão ficar alinhado com os campos -->
+              <label>&nbsp;</label>
+              <button type="submit" class="botao">Filtrar</button>
+            </div>
+          </form>
+      <div class="tabela-rolagem">
+        <table>
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Localização</th>
+              <th>Capacidade</th>
+              <th>Recursos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>F305</td><td>Edifício Frings, 3º andar</td><td>2</td><td>—</td></tr>
+            <tr><td>K210</td><td>Edifício Kennedy, 2º andar</td><td>8</td><td>Quadro branco, Projetor, Computador</td></tr>
+            <tr><td>L101</td><td>Edifício Leme, 1º andar</td><td>4</td><td>Quadro branco</td></tr>
+            <tr><td>L104</td><td>Edifício Leme, 1º andar</td><td>6</td><td>Quadro branco, TV</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="cartao">
+      <h2>Cadastrar nova sala</h2>
+      <form action="salas.html" method="get">
+        <div class="linha">
+          <div>
+            <label for="codigo">Código</label>
+            <input type="text" id="codigo" name="codigo" placeholder="Ex.: L105" required>
+          </div>
+          <div>
+            <label for="capacidade">Capacidade</label>
+            <input type="number" id="capacidade" name="capacidade" min="2" required>
+          </div>
+        </div>
+
+        <!-- localizacao -->
+        <div class="linha">
+          <div>
+            <label for="edificio">Edifício</label>
+            <select id="edificio" name="edificio" required>
+              <option value="">Escolha...</option>
+              <option>Edifício Frings</option>
+              <option>Edifício Kennedy</option>
+              <option>Edifício Leme</option>
+              <option>Rio DataCentro (RDC)</option>
+            </select>
+          </div>
+          <div>
+            <label for="andar">Andar</label>
+            <!-- pode contar andares de subsolo -->
+            <select id="andar" name="andar" required>
+              <option value="">Escolha...</option>
+                <option value="-1">-1 subsolo</option>
+                <option value="0">0 Térreo</option>
+                <option value="1">1º andar</option>
+            </select>
+          </div>
+        </div>
+
+        <label>Recursos</label>
+        <p>
+          <label class="opcao"><input type="checkbox" name="recursos" value="quadro"> Quadro branco</label>
+          <label class="opcao"><input type="checkbox" name="recursos" value="tv"> TV</label>
+          <label class="opcao"><input type="checkbox" name="recursos" value="projetor"> Projetor</label>
+          <label class="opcao"><input type="checkbox" name="recursos" value="computador"> Computadores</label>
+        </p>
+
+        <button type="submit" class="botao">Cadastrar sala</button>
+      </form>
+    </section>
+
+    <section class="cartao">
+      <h2>Edifícios</h2>
+      <div class="tabela-rolagem">
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Salas cadastradas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Edifício Frings</td><td>1</td></tr>
+            <tr><td>Edifício Kennedy</td><td>1</td></tr>
+            <tr><td>Edifício Leme</td><td>2</td></tr>
+            <tr><td>Rio DataCentro (RDC)</td><td>4</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <form action="salas.html" method="get" style="margin-top: 16px;">
+        <label for="nome-edificio">Novo edifício</label>
+        <input type="text" id="nome-edificio" name="nome-edificio" placeholder="Ex.: Edifício Cardeal Leme" required>
+                <!-- negativo é subsolo, 0 terreo -->
+        <div class="linha">
+          <div>
+            <label for="andar-inicial">Do andar</label>
+            <input type="number" id="andar-inicial" name="andar-inicial" placeholder="Ex.: -1 (subsolo)" required>
+          </div>
+          <div>
+            <label for="andar-final">Até o andar</label>
+            <input type="number" id="andar-final" name="andar-final" placeholder="Ex.: 10" required>
+          </div>
+        </div>
+        <button type="submit" class="botao">Cadastrar edifício</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    INF1040 - Projeto de Programação Modular | Grupo 7 | 2026.2
+  </footer>
+
+</body>
+</html>

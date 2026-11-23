@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <!--pra usar no celular-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salas · Reserva de Salas</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="cabecalho">
+    <a class="marca" href="painel.html"> PUC-RJ <span>Reserva de Salas</span></a>
+    <div class="usuario">
+      Zezinho (Administrador)
+      <a href="index.html">Sair</a>
+    </div>
+  </header>
+
+  <nav class="menu">
+    <a href="painel.html">Início</a>
+    <a href="reservar.html" class="ativo">Reservar sala</a>
+    <a href="minhas-reservas.html">Minhas reservas</a>
+    <a href="salas.html">Salas</a>
+    <a href="atendimento.html">Atendimento</a>
+    <a href="bloqueios.html">Bloqueios</a>
+    <a href="usuarios.html">Usuários</a>
+    <a href="relatorios.html">Relatórios</a>
+  </nav>
+
+  <!-- conteudo da pagina -->
+  <main class="conteudo">
+
+    <h1>Reservar sala</h1>
+
+    <!-- regras (RN01, RN02, RN03) para o estudante -->
+    <div class="mensagem info">
+      Reservas das <strong>08h às 22h</strong>, começando em hora cheia ou meia hora,
+      com duração de <strong>30 à 120 minutos</strong>, até <strong>7 dias</strong> à frente.
+      O grupo deve ter no mínimo <strong>2 pessoas</strong>.
+    </div>
+
+    <!-- consultar disponibilidade (RF04) -->
+    <section class="cartao">
+      <h2>1. Consultar salas disponíveis</h2>
+
+      <form action="reservar.html" method="get">
+        <div class="linha">
+          <div>
+            <label for="data">Data</label>
+            <input type="date" id="data" name="data" value="2026-11-25" required>
+          </div>
+                    <div>
+            <label for="inicio-hora">Início</label>
+            <!-- duas listas, hora e minuto -->
+            <div class="linha" style="grid-template-columns: 1fr 1fr; gap: 0 8px;">
+              <select id="inicio-hora" name="inicio-hora" required>
+                <option value="08">08h</option>
+                <option value="09">09h</option>
+                <option value="10" selected>10h</option>
+                <option value="11">11h</option>
+                <option value="12">12h</option>
+                <option value="13">13h</option>
+                <option value="14">14h</option>
+                <option value="15">15h</option>
+                <option value="16">16h</option>
+                <option value="17">17h</option>
+                <option value="18">18h</option>
+                <option value="19">19h</option>
+                <option value="20">20h</option>
+                <option value="21">21h</option>
+              </select>
+              <select id="inicio-minuto" name="inicio-minuto" required>
+                <option value="00" selected>00</option>
+                <option value="30">30</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label for="duracao">Duração</label>
+            <!-- dura de 30 a 120 minutos (RN01)-->
+            <select id="duracao" name="duracao" required>
+              <option value="30">30 minutos</option>
+              <option value="60">1 hora</option>
+              <option value="90" selected>1 hora e 30</option>
+              <option value="120">2 horas</option>
+            </select>
+          </div>
+          
+          <div>
+            <label for="grupo">Pessoas no grupo</label>
+            <input type="number" id="grupo" name="grupo" value="4" min="2" required>
+          </div>
+        </div>
+
+        <label>Recursos necessários</label>
+        <p>
+          <label class="opcao"><input type="checkbox" name="recursos" value="quadro" checked> Quadro branco</label>
+          <label class="opcao"><input type="checkbox" name="recursos" value="tv"> TV</label>
+          <label class="opcao"><input type="checkbox" name="recursos" value="projetor"> Projetor</label>
+          <label class="opcao"><input type="checkbox" name="recursos" value="computador"> Computador</label>
+        </p>
+
+        <button type="submit" class="botao">Consultar</button>
+      </form>
+    </section>
+
+    <!-- resultado da consulta -->
+    <section class="cartao">
+      <h2>2. Salas livres em 25/11/2026, das 10:00 às 11:30</h2>
+      <p>O horário <strong>ainda não está reservado</strong> Clique em "Reservar" para confirmar.</p>
+
+      <div class="tabela-rolagem">
+        <table>
+          <thead>
+            <tr>
+              <th>Sala</th>
+              <th>Localização</th>
+              <th>Capacidade</th>
+              <th>Recursos</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>L101</td>
+              <td>Edifício Leme, 1º andar</td>
+              <td>4 pessoas</td>
+              <td>Quadro branco</td>
+              <td><a class="botao pequeno" href="minhas-reservas.html?nova=1">Reservar</a></td>
+            </tr>
+            <tr>
+              <td>L104</td>
+              <td>Edifício Leme, 1º andar</td>
+              <td>6 pessoas</td>
+              <td>Quadro branco, TV</td>
+              <td><a class="botao pequeno" href="minhas-reservas.html?nova=1">Reservar</a></td>
+            </tr>
+            <tr>
+              <td>K210</td>
+              <td>Edifício Kennedy, 2º andar</td>
+              <td>8 pessoas</td>
+              <td>Quadro branco, Projetor, Computador</td>
+              <td><a class="botao pequeno" href="minhas-reservas.html?nova=1">Reservar</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!--erro (RNF04: dizer a causa da recusa) -->
+    <div class="mensagem erro">
+      <strong>LIMITE ATINGIDO:</strong> você já tem 2 reservas confirmadas. Cancele uma delas para reservar outra.
+    </div>
+  </main>
+
+  <footer class="rodape">
+    INF1040 - Projeto de Programação Modular | Grupo 7 | 2026.2
+  </footer>
+
+</body>
+</html>

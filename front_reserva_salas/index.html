@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar · Reserva de Salas</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="pagina-login">
+
+  <main class="caixa-login">
+    <h1>Reserva de Salas de Estudo</h1>
+    <p style="text-align: center;">Digite sua matrícula e senha.</p>
+
+    <!-- exemplo de erro (RF01) -->
+    <div class="mensagem erro">Matrícula ou senha inválidas.</div>
+
+    <!-- por enquanto entrar só abre o painel do adm -->
+    <form action="painel.html" method="get">
+      <label for="matricula">Matrícula</label>
+      <input type="text" id="matricula" name="matricula" required>
+
+      <label for="senha">Senha</label>
+      <input type="password" id="senha" name="senha" required>
+
+      <button type="submit" class="botao">Entrar</button>
+    </form>
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <!--pra usar no celular-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usuários · Reserva de Salas</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="cabecalho">
+    <a class="marca" href="painel.html"> PUC-RJ <span>Reserva de Salas</span></a>
+    <div class="usuario">
+      Zezinho (Administrador)
+      <a href="index.html">Sair</a>
+    </div>
+  </header>
+
+  <nav class="menu">
+    <a href="painel.html">Início</a>
+    <a href="reservar.html">Reservar sala</a>
+    <a href="minhas-reservas.html">Minhas reservas</a>
+    <a href="salas.html">Salas</a>
+    <a href="atendimento.html">Atendimento</a>
+    <a href="bloqueios.html" class="ativo">Bloqueios</a>
+    <a href="usuarios.html">Usuários</a>
+    <a href="relatorios.html">Relatórios</a>
+  </nav>
+
+  <!-- conteudo da pagina -->
+  <main class="conteudo">
+
+    <h1>Bloqueios por manutenção</h1>
+
+    <div class="mensagem erro">
+      <strong>Atenção:</strong> ao criar um bloqueio, as reservas confirmadas no mesmo horário
+      são <strong>canceladas</strong>. Retirar o bloqueio depois <strong>não</strong> devolve essas reservas.
+    </div>
+
+    <section class="cartao">
+      <h2>Criar bloqueio</h2>
+      <form action="bloqueios.html" method="get">
+        <label for="sala">Sala</label>
+        <select id="sala" name="sala" required>
+          <option>F305</option>
+          <option>K210</option>
+          <option>L101</option>
+          <option>L104</option>
+        </select>
+
+        <!-- bloqueios podem durar vários dias, por isso data e hora -->
+        <div class="linha">
+          <div>
+            <label for="inicio">Início</label>
+            <input type="datetime-local" id="inicio" name="inicio" required>
+          </div>
+          <div>
+            <label for="fim">Fim</label>
+            <input type="datetime-local" id="fim" name="fim" required>
+          </div>
+        </div>
+
+        <label for="motivo">Motivo</label>
+        <input type="text" id="motivo" name="motivo" placeholder="Obrigatório" required>
+
+        <button type="submit" class="botao perigo">Criar bloqueio</button>
+      </form>
+    </section>
+
+    <section class="cartao">
+      <h2>Bloqueios cadastrados</h2>
+      <div class="tabela-rolagem">
+        <table>
+          <thead>
+            <tr>
+              <th>Sala</th>
+              <th>Início</th>
+              <th>Fim</th>
+              <th>Motivo</th>
+              <th>Situação</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>K210</td>
+              <td>26/11/2026 08:00</td>
+              <td>28/11/2026 22:00</td>
+              <td>Troca do projetor</td>
+              <td><span class="situacao ativo">ATIVO</span></td>
+              <td><a class="botao secundario pequeno" href="bloqueios.html">Retirar bloqueio</a></td>
+            </tr>
+            <tr>
+              <td>L101</td>
+              <td>10/11/2026 08:00</td>
+              <td>10/11/2026 12:00</td>
+              <td>Pintura</td>
+              <td><span class="situacao falta">RETIRADO</span></td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    INF1040 - Projeto de Programação Modular | Grupo 7 | 2026.2
+  </footer>
+
+</body>
+</html>

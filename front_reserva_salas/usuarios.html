@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <!--pra usar no celular-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usuários · Reserva de Salas</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="cabecalho">
+    <a class="marca" href="painel.html"> PUC-RJ <span>Reserva de Salas</span></a>
+    <div class="usuario">
+      Zezinho (Administrador)
+      <a href="index.html">Sair</a>
+    </div>
+  </header>
+
+  <nav class="menu">
+    <a href="painel.html">Início</a>
+    <a href="reservar.html">Reservar sala</a>
+    <a href="minhas-reservas.html">Minhas reservas</a>
+    <a href="salas.html">Salas</a>
+    <a href="atendimento.html">Atendimento</a>
+    <a href="bloqueios.html">Bloqueios</a>
+    <a href="usuarios.html" class="ativo">Usuários</a>
+    <a href="relatorios.html">Relatórios</a>
+  </nav>
+
+  <!-- conteudo da pagina -->
+  <main class="conteudo">
+
+    <h1>Usuários</h1>
+
+    <section class="cartao">
+      <h2>Cadastrar usuário</h2>
+      <form action="usuarios.html" method="get">
+        <div class="linha">
+          <div>
+            <label for="matricula">Matrícula</label>
+            <input type="text" id="matricula" name="matricula" placeholder="Obrigatório" required>
+          </div>
+          <div>
+            <label for="perfil">Perfil</label>
+            <select id="perfil" name="perfil" required>
+              <option value="ESTUDANTE">Estudante</option>
+              <option value="ATENDENTE">Atendente</option>
+              <option value="ADMINISTRADOR">Administrador</option>
+            </select>
+          </div>
+        </div>
+
+        <label for="nome">Nome completo</label>
+        <input type="text" id="nome" name="nome" placeholder="Obrigatório" required>
+
+        <label for="senha">Senha inicial</label>
+        <input type="password" id="senha" name="senha" placeholder="Obrigatório" required>
+
+        <button type="submit" class="botao">Cadastrar usuário</button>
+      </form>
+    </section>
+
+    <!-- a senha nao aparece na lista (RNF02) -->
+    <section class="cartao">
+      <h2>Usuários cadastrados</h2>
+      <div class="tabela-rolagem">
+
+      <!-- filtro de matricula, nome e perfil -->
+      <form action="usuarios.html" method="get" class="linha">
+        <div>
+          <label for="filtro-matricula">Matrícula</label>
+          <input type="text" id="filtro-matricula" name="filtro-matricula" placeholder="Digite a matrícula">
+        </div>
+        <div>
+          <label for="filtro-nome">Nome</label>
+          <input type="search" id="filtro-nome" name="filtro-nome" placeholder="Digite o nome">
+        </div>
+        <div>
+          <label for="filtro-perfil">Perfil</label>
+          <select id="filtro-perfil" name="filtro-perfil">
+            <option value="">Todos</option>
+            <option value="ESTUDANTE">Estudante</option>
+            <option value="ATENDENTE">Atendente</option>
+            <option value="ADMINISTRADOR">Administrador</option>
+          </select>
+        </div>
+        <div>
+          <!-- label vazio só para o botão ficar alinhado com os campos -->
+          <label>&nbsp;</label>
+          <button type="submit" class="botao">Filtrar</button>
+        </div>
+      </form>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Matrícula</th>
+              <th>Nome</th>
+              <th>Perfil</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>0000001</td><td>Ana Souza</td><td>Administrador</td></tr>
+            <tr><td>0000002</td><td>Marcos Pereira</td><td>Atendente</td></tr>
+            <tr><td>2410001</td><td>Bruno Lima</td><td>Estudante</td></tr>
+            <tr><td>2410002</td><td>Carla Dias</td><td>Estudante</td></tr>
+            <tr><td>2410003</td><td>Diego Alves</td><td>Estudante</td></tr>
+            <tr><td>2410004</td><td>Elisa Rocha</td><td>Estudante</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    INF1040 - Projeto de Programação Modular | Grupo 7 | 2026.2
+  </footer>
+
+</body>
+</html>

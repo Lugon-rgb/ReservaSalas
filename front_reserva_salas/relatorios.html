@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <!--pra usar no celular-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usuários · Reserva de Salas</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="cabecalho">
+    <a class="marca" href="painel.html"> PUC-RJ <span>Reserva de Salas</span></a>
+    <div class="usuario">
+      Zezinho (Administrador)
+      <a href="index.html">Sair</a>
+    </div>
+  </header>
+
+  <nav class="menu">
+    <a href="painel.html">Início</a>
+    <a href="reservar.html">Reservar sala</a>
+    <a href="minhas-reservas.html">Minhas reservas</a>
+    <a href="salas.html">Salas</a>
+    <a href="atendimento.html">Atendimento</a>
+    <a href="bloqueios.html">Bloqueios</a>
+    <a href="usuarios.html">Usuários</a>
+    <a href="relatorios.html" class="ativo">Relatórios</a>
+  </nav>
+
+  <!-- conteudo da pagina -->
+  <main class="conteudo">
+
+    <h1>Relatórios</h1>
+
+    <section class="cartao">
+      <h2>Escolher período</h2>
+      <form action="relatorios.html" method="get" class="linha">
+        <div>
+          <label for="de">De</label>
+          <input type="date" id="de" name="de" value="2026-11-01" required>
+        </div>
+        <div>
+          <label for="ate">Até</label>
+          <input type="date" id="ate" name="ate" value="2026-11-30" required>
+        </div>
+        <div>
+          <label for="sala">Sala</label>
+          <select id="sala" name="sala">
+            <option value="">Todas</option>
+            <option>F305</option>
+            <option>K210</option>
+            <option>L101</option>
+            <option>L104</option>
+          </select>
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <button type="submit" class="botao">Gerar</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- relatório so mostra números por sala -->
+    <section class="cartao">
+      <h2>01/11/2026 a 30/11/2026</h2>
+      <p>Gerado em 24/11/2026 às 10:00.</p>
+      <div class="tabela-rolagem">
+        <table>
+          <thead>
+            <tr>
+              <th>Sala</th>
+              <th>Confirmadas</th>
+              <th>Em uso</th>
+              <th>Concluídas</th>
+              <th>Faltas</th>
+              <th>Canceladas</th>
+              <th>Minutos de uso</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>F305</td><td>1</td><td>0</td><td>6</td><td>1</td><td>0</td><td>340</td></tr>
+            <tr><td>K210</td><td>2</td><td>0</td><td>9</td><td>2</td><td>3</td><td>760</td></tr>
+            <tr><td>L101</td><td>0</td><td>0</td><td>12</td><td>0</td><td>1</td><td>655</td></tr>
+            <tr><td>L104</td><td>1</td><td>1</td><td>8</td><td>3</td><td>2</td><td>590</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    INF1040 - Projeto de Programação Modular | Grupo 7 | 2026.2
+  </footer>
+
+</body>
+</html>

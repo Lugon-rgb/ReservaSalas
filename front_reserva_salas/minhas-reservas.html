@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <!--pra usar no celular-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salas · Reserva de Salas</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="cabecalho">
+    <a class="marca" href="painel.html"> PUC-RJ <span>Reserva de Salas</span></a>
+    <div class="usuario">
+      Zezinho (Administrador)
+      <a href="index.html">Sair</a>
+    </div>
+  </header>
+
+  <nav class="menu">
+    <a href="painel.html">Início</a>
+    <a href="reservar.html">Reservar sala</a>
+    <a href="minhas-reservas.html" class="ativo">Minhas reservas</a>
+    <a href="salas.html">Salas</a>
+    <a href="atendimento.html">Atendimento</a>
+    <a href="bloqueios.html">Bloqueios</a>
+    <a href="usuarios.html">Usuários</a>
+    <a href="relatorios.html">Relatórios</a>
+  </nav>
+
+  <!-- conteudo da pagina -->
+  <main class="conteudo">
+
+    <h1>Minhas reservas</h1>
+    <!-- aviso (RN07) -->
+    <div class="mensagem info">
+      Chegue no horário: a entrada só pode ser registrada até
+      <strong>15 minutos depois do início</strong>. Depois disso,
+      a reserva vira <strong>FALTA</strong> e a sala é liberada.
+    </div>
+
+    <!-- mensagem de sucesso -->
+    <div class="mensagem sucesso">
+      Reserva confirmada: sala <strong>L104</strong>, 25/11/2026, das 10:00 às 11:30.
+    </div>
+
+    <section class="cartao">
+      <h2>Histórico</h2>
+      <p>Só é possível cancelar reservas <strong>confirmadas</strong> e <strong>antes do início</strong>.</p>
+
+            <!-- filtro do histórico (F13: filtros por situação e período) -->
+      <form action="minhas-reservas.html" method="get" class="linha">
+        <div>
+          <label for="periodo">Mostrar</label>
+          <select id="periodo" name="periodo">
+            <option value="proximas" selected>Próximas</option>
+            <option value="anteriores">Anteriores</option>
+            <option value="todas">Todas</option>
+          </select>
+        </div>
+        <div>
+          <label for="situacao">Situação</label>
+          <select id="situacao" name="situacao">
+            <option value="">Todas</option>
+            <option value="CONFIRMADA">Confirmada</option>
+            <option value="EM_USO">Em uso</option>
+            <option value="CONCLUIDA">Concluída</option>
+            <option value="FALTA">Falta</option>
+            <option value="CANCELADA">Cancelada</option>
+          </select>
+        </div>
+        <div>
+          <!-- label vazio só para o botão ficar alinhado com os campos -->
+          <label>&nbsp;</label>
+          <button type="submit" class="botao">Filtrar</button>
+        </div>
+      </form>
+
+      <div class="tabela-rolagem">
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Horário</th>
+              <th>Sala</th>
+              <th>Grupo</th>
+              <th>Situação</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>25/11/2026</td>
+              <td>10:00 – 11:30</td>
+              <td>L104</td>
+              <td>4</td>
+              <td><span class="situacao confirmada">CONFIRMADA</span></td>
+              <td><a class="botao perigo pequeno" href="#cancelar">Cancelar</a></td>
+            </tr>
+            <tr>
+              <td>27/11/2026</td>
+              <td>14:00 – 16:00</td>
+              <td>K210</td>
+              <td>6</td>
+              <td><span class="situacao confirmada">CONFIRMADA</span></td>
+              <td><a class="botao perigo pequeno" href="#cancelar">Cancelar</a></td>
+            </tr>
+            <tr>
+              <td>20/11/2026</td>
+              <td>09:00 – 10:00</td>
+              <td>L101</td>
+              <td>3</td>
+              <td><span class="situacao concluida">CONCLUÍDA</span></td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>18/11/2026</td>
+              <td>15:00 – 16:30</td>
+              <td>L104</td>
+              <td>5</td>
+              <td><span class="situacao falta">FALTA</span></td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>17/11/2026</td>
+              <td>11:00 – 12:00</td>
+              <td>K210</td>
+              <td>4</td>
+              <td><span class="situacao cancelada">CANCELADA</span></td>
+              <td>Motivo: prova remarcada</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- motivo é obrigatório (RN06). -->
+    <section class="cartao" id="cancelar">
+      <h2>Cancelar reserva</h2>
+      <form action="minhas-reservas.html" method="get">
+        <label for="reserva">Reserva</label>
+        <select id="reserva" name="reserva">
+          <option>L104 · 25/11/2026 · 10:00 – 11:30</option>
+          <option>K210 · 27/11/2026 · 14:00 – 16:00</option>
+        </select>
+
+        <label for="motivo">Motivo do cancelamento</label>
+        <textarea id="motivo" name="motivo" rows="3" placeholder="Obrigatório"></textarea>
+
+        <button type="submit" class="botao perigo">Confirmar cancelamento</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    INF1040 - Projeto de Programação Modular | Grupo 7 | 2026.2
+  </footer>
+
+</body>
+</html>

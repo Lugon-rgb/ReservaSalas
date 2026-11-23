@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <!--pra usar no celular-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atendimento - Reserva de Salas</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="cabecalho">
+    <a class="marca" href="painel.html"> PUC-RJ <span>Reserva de Salas</span></a>
+    <div class="usuario">
+      Zezinho (Administrador)
+      <a href="index.html">Sair</a>
+    </div>
+  </header>
+
+  <nav class="menu">
+    <a href="painel.html">Início</a>
+    <a href="reservar.html">Reservar sala</a>
+    <a href="minhas-reservas.html">Minhas reservas</a>
+    <a href="salas.html">Salas</a>
+    <a href="atendimento.html" class="ativo">Atendimento</a>
+    <a href="bloqueios.html">Bloqueios</a>
+    <a href="usuarios.html">Usuários</a>
+    <a href="relatorios.html">Relatórios</a>
+  </nav>
+
+  <!-- conteudo da pagina -->
+  <main class="conteudo">
+
+    <h1>Atendimento</h1>
+
+    <div class="mensagem info">
+      A entrada pode ser registrada do início até <strong>15 minutos depois</strong>.
+      Depois disso, a reserva vira <strong>FALTA</strong> e a sala é liberada.
+    </div>
+
+    <section class="cartao">
+      <h2>Reservas de hoje</h2>
+      <!-- filtro por data, edificio, andar e sala -->
+      <form action="atendimento.html" method="get" class="linha">
+        <div>
+          <label for="data">Data</label>
+          <input type="date" id="data" name="data" value="2026-11-24">
+        </div>
+        <div>
+          <label for="edificio">Edifício</label>
+          <select id="edificio" name="edificio">
+            <option value="">Todos</option>
+            <option>Edifício Frings</option>
+            <option>Edifício Kennedy</option>
+            <option>Edifício Leme</option>
+          </select>
+        </div>
+        <div>
+          <label for="andar">Andar</label>
+          <select id="andar" name="andar">
+            <option value="">Todos</option>
+            <option value="-1">-1 subsolo</option>
+            <option value="0">0 Térreo</option>
+            <option value="1">1º andar</option>
+          </select>
+        </div>
+        <div>
+          <label for="sala">Sala</label>
+          <select id="sala" name="sala">
+            <option value="">Todas</option>
+            <option>F305</option>
+            <option>K210</option>
+            <option>L101</option>
+            <option>L104</option>
+          </select>
+        </div>
+        <div>
+          <!-- label vazio só para o botão ficar alinhado com os campos -->
+          <label>&nbsp;</label>
+          <button type="submit" class="botao">Filtrar</button>
+        </div>
+      </form>
+
+      <div class="tabela-rolagem">
+        <table>
+          <thead>
+            <tr>
+              <th>Horário</th>
+              <th>Sala</th>
+              <th>Responsável</th>
+              <th>Grupo</th>
+              <th>Situação</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>08:00 – 09:00</td>
+              <td>L101</td>
+              <td>Bruno Lima (2410001)</td>
+              <td>3</td>
+              <td><span class="situacao concluida">CONCLUÍDA</span></td>
+              <td>Entrada 08:05 · Saída 08:55</td>
+            </tr>
+            <tr>
+              <td>09:00 – 10:00</td>
+              <td>K210</td>
+              <td>Carla Dias (2410002)</td>
+              <td>5</td>
+              <td><span class="situacao falta">FALTA</span></td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>09:30 – 11:00</td>
+              <td>L104</td>
+              <td>Diego Alves (2410003)</td>
+              <td>4</td>
+              <td><span class="situacao em-uso">EM USO</span></td>
+              <td><a class="botao secundario pequeno" href="atendimento.html">Registrar saída</a></td>
+            </tr>
+            <tr>
+              <td>10:00 – 11:00</td>
+              <td>F305</td>
+              <td>Elisa Rocha (2410004)</td>
+              <td>2</td>
+              <td><span class="situacao confirmada">CONFIRMADA</span></td>
+              <td><a class="botao pequeno" href="atendimento.html">Registrar entrada</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    INF1040 - Projeto de Programação Modular | Grupo 7 | 2026.2
+  </footer>
+
+</body>
+</html>
