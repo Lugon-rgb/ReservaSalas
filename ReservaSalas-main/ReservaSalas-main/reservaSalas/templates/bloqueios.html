@@ -1,0 +1,107 @@
+{% extends "layout.html" %}
+{% block content %}
+  <!-- conteudo da pagina -->
+  <main class="conteudo">
+
+    <h1>Bloqueios por manutenção</h1>
+
+    <div class="mensagem erro">
+      <strong>Atenção:</strong> ao criar um bloqueio, as reservas confirmadas no mesmo horário
+      são <strong>canceladas</strong>. Retirar o bloqueio depois <strong>não</strong> devolve essas reservas.
+    </div>
+
+    {% with mensagens = get_flashed_messages(with_categories=true) %}
+      {% for categoria, mensagem in mensagens %}
+        <div class="mensagem {{ 'erro' if categoria == 'danger' else ('sucesso' if categoria == 'sucesso' else categoria) }}">{{ mensagem }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <section class="cartao">
+      <h2>Criar bloqueio</h2>
+      <form action="{{ url_for('bloqueios') }}" method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.sala_id.label(for="sala") }}
+        {{ form.sala_id(id="sala") }}
+        {% for error in form.sala_id.errors %}
+          <span class="mensagem erro">{{ error }}</span>
+        {% endfor %}
+
+        <!-- bloqueios podem durar vários dias, por isso data e hora -->
+        <div class="linha">
+          <div>
+            {{ form.inicio.label(for="inicio") }}
+            {{ form.inicio(id="inicio") }}
+            {% for error in form.inicio.errors %}
+              <span class="mensagem erro">{{ error }}</span>
+            {% endfor %}
+          </div>
+          <div>
+            {{ form.fim.label(for="fim") }}
+            {{ form.fim(id="fim") }}
+            {% for error in form.fim.errors %}
+              <span class="mensagem erro">{{ error }}</span>
+            {% endfor %}
+          </div>
+        </div>
+
+        {{ form.motivo.label(for="motivo") }}
+        {{ form.motivo(id="motivo", placeholder="Obrigatório") }}
+        {% for error in form.motivo.errors %}
+          <span class="mensagem erro">{{ error }}</span>
+        {% endfor %}
+
+        {{ form.submit_bloqueio(class="botao perigo", style="width: auto;") }}
+      </form>
+    </section>
+
+    <section class="cartao">
+      <h2>Bloqueios cadastrados</h2>
+      <div class="tabela-rolagem">
+        <table>
+          <thead>
+            <tr>
+              <th>Sala</th>
+              <th>Início</th>
+              <th>Fim</th>
+              <th>Motivo</th>
+              <th>Situação</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for bloqueio in bloqueios %}
+            <tr>
+              <td>{{ salas_por_id.get(bloqueio.sala_id, 'Sala ' ~ bloqueio.sala_id) }}</td>
+              <td>{{ bloqueio.data_hora_inicio.strftime('%d/%m/%Y %H:%M') }}</td>
+              <td>{{ bloqueio.data_hora_fim.strftime('%d/%m/%Y %H:%M') }}</td>
+              <td>{{ bloqueio.motivo }}</td>
+              <td>
+                {% if bloqueio.situacao == 'CANCELADO' %}
+                  <span class="situacao falta">RETIRADO</span>
+                {% elif agora < bloqueio.data_hora_inicio %}
+                  <span class="situacao confirmada">AGENDADO</span>
+                {% elif agora <= bloqueio.data_hora_fim %}
+                  <span class="situacao ativo">ATIVO</span>
+                {% else %}
+                  <span class="situacao falta">ENCERRADO</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if bloqueio.situacao == 'ATIVO' and agora <= bloqueio.data_hora_fim %}
+                  <form method="POST" action="{{ url_for('bloqueios') }}">
+                    {{ form_retirar.csrf_token }}
+                    <input type="hidden" name="bloqueio_id" value="{{ bloqueio.id }}">
+                    {{ form_retirar.submit_retirar(class="botao secundario pequeno", style="width: auto; margin: 0;") }}
+                  </form>
+                {% else %}
+                  —
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+{% endblock %}

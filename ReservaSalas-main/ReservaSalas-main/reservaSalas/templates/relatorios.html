@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+{% block content %}
+  <!-- conteudo da pagina -->
+  <main class="conteudo">
+
+    <h1>Relatórios</h1>
+
+    <section class="cartao">
+      <h2>Escolher período</h2>
+      <form action="{{ url_for('relatorios') }}" method="get" class="linha">
+        <div>
+          <label for="de">De</label>
+          <input type="date" id="de" name="de" value="{{ de.isoformat() }}" required>
+        </div>
+        <div>
+          <label for="ate">Até</label>
+          <input type="date" id="ate" name="ate" value="{{ ate.isoformat() }}" required>
+        </div>
+        <div>
+          <label for="sala">Sala</label>
+          <select id="sala" name="sala">
+            <option value="">Todas</option>
+            {% for sala in salas %}
+              <option value="{{ sala.id }}" {% if sala_id == sala.id %}selected{% endif %}>{{ sala.nome }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <button type="submit" class="botao">Gerar</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- relatório so mostra números por sala -->
+    {% if erro %}
+      <div class="mensagem erro">{{ erro }}</div>
+    {% else %}
+    <section class="cartao">
+      <h2>{{ de.strftime('%d/%m/%Y') }} a {{ ate.strftime('%d/%m/%Y') }}</h2>
+      <p>Gerado em {{ gerado_em.strftime('%d/%m/%Y') }} às {{ gerado_em.strftime('%H:%M') }}.</p>
+      <div class="tabela-rolagem">
+        <table>
+          <thead>
+            <tr>
+              <th>Sala</th>
+              <th>Confirmadas</th>
+              <th>Em uso</th>
+              <th>Concluídas</th>
+              <th>Faltas</th>
+              <th>Canceladas</th>
+              <th>Minutos de uso</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for linha in linhas %}
+            <tr>
+              <td>{{ linha.sala }}</td>
+              <td>{{ linha.CONFIRMADA }}</td>
+              <td>{{ linha.EM_USO }}</td>
+              <td>{{ linha.CONCLUIDA }}</td>
+              <td>{{ linha.FALTA }}</td>
+              <td>{{ linha.CANCELADA }}</td>
+              <td>{{ linha.min_uso }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+    {% endif %}
+  </main>
+{% endblock %}

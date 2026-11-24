@@ -48,6 +48,15 @@ class Reserva(db.Model):
     grupo_size = db.Column(db.Integer, nullable=False)
     data_hora_inicio = db.Column(db.DateTime, nullable=False)
     data_hora_fim = db.Column(db.DateTime, nullable=False)
+    situacao = db.Column(db.String(20), nullable=False, default='CONFIRMADA')
+    recursos = db.Column(JSON, nullable=False, default=list)
+    entrada = db.Column(db.DateTime)
+    saida = db.Column(db.DateTime)
+    motivo_cancelamento = db.Column(db.String(200))
+    cancelada_por = db.Column(db.String(20))
+    cancelada_em = db.Column(db.DateTime)
+    bloqueio_id = db.Column(db.Integer)
+    sala = db.relationship('Sala')
     
     def __repr__(self):
         return f"Reserva('{self.user_matricula}', '{self.sala_id}', '{self.grupo_size}', '{self.data_hora_inicio}', '{self.data_hora_fim}')"
@@ -71,6 +80,10 @@ class Bloqueio(db.Model):
     data_hora_inicio = db.Column(db.DateTime, nullable=False)
     data_hora_fim = db.Column(db.DateTime, nullable=False)
     motivo = db.Column(db.String(200), nullable=False)
+    situacao = db.Column(db.String(20), nullable=False, default='ATIVO')  # ATIVO ou CANCELADO
+    criado_por = db.Column(db.String(20))    # matrícula do administrador
+    retirado_por = db.Column(db.String(20))  # matrícula de quem retirou
+    retirado_em = db.Column(db.DateTime)
     
     def __repr__(self):
         return f"Bloqueio('{self.sala_id}', '{self.data_hora_inicio}', '{self.data_hora_fim}')"

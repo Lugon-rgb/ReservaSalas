@@ -2,16 +2,6 @@ from reservaSalas.persistencia.models import Edificio, Sala, User
 from reservaSalas import db
 
 def cadastrar_sala(dados_sala):
-    """
-    Cadastra uma nova sala no banco de dados.
-
-    Args:
-        dados_sala (dict): Um dicionário contendo os dados da sala a ser cadastrada.
-            Deve conter as chaves: 'nome', 'capacidade', 'edificio_id', 'andar' e 'recursos'.
-
-    Returns:
-        Sala: A instância da sala cadastrada.
-    """
     nova_sala = Sala()
     nova_sala.nome = dados_sala['nome']
     nova_sala.capacidade = dados_sala['capacidade']

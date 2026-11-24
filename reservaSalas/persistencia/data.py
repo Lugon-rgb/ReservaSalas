@@ -20,14 +20,14 @@ salas_iniciais = [
     {
         "nome": "L101",
         "capacidade": 4,
-        "edificio": "Edifício Lemme",
+        "edificio": "Edifício Leme",
         "andar": 1,
         "recursos": ["Quadro branco"]
     },
     {
         "nome": "L104",
         "capacidade": 6,
-        "edificio": "Edifício Lemme",
+        "edificio": "Edifício Leme",
         "andar": 1,
         "recursos": ["Quadro branco", "TV"]
     }
@@ -89,35 +89,35 @@ bloqueios_iniciais = [
 
 reservas = [
     {
-        "user_matricula": "2623189",
+        "user_matricula": "2410001",
         "sala_id": 4,
         "grupo_size": 4,
         "data_hora_inicio": datetime(2026, 11, 20, 10, 0, tzinfo=timezone.utc),
         "data_hora_fim": datetime(2026, 11, 20, 11, 30, tzinfo=timezone.utc)
     },
     {
-        "user_matricula": "2623189",
+        "user_matricula": "2410002",
         "sala_id": 2,
         "grupo_size": 6,
         "data_hora_inicio": datetime(2026, 11, 27, 14, 0, tzinfo=timezone.utc),
         "data_hora_fim": datetime(2026, 11, 27, 16, 0, tzinfo=timezone.utc)
     },
     {
-        "user_matricula": "2623189",
+        "user_matricula": "2410003",
         "sala_id": 3,
         "grupo_size": 3,
         "data_hora_inicio": datetime(2026, 11, 20, 9, 0, tzinfo=timezone.utc),
         "data_hora_fim": datetime(2026, 11, 20, 10, 0, tzinfo=timezone.utc)
     },
     {
-        "user_matricula": "2623189",
+        "user_matricula": "2410004",
         "sala_id": 4,
         "grupo_size": 5,
         "data_hora_inicio": datetime(2026, 11, 18, 15, 0, tzinfo=timezone.utc),
         "data_hora_fim": datetime(2026, 11, 18, 16, 30, tzinfo=timezone.utc)
     },
     {
-        "user_matricula": "2623189",
+        "user_matricula": "2410001",
         "sala_id": 2,
         "grupo_size": 4,
         "data_hora_inicio": datetime(2026, 11, 17, 11, 0, tzinfo=timezone.utc),
@@ -137,7 +137,7 @@ edificios = [
         "andar_maximo": 2
     },
     {
-        "nome": "Edifício Lemme",
+        "nome": "Edifício Leme",
         "andar_minimo": -1,
         "andar_maximo": 2
     },

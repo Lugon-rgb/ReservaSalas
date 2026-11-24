@@ -1,0 +1,153 @@
+{% extends "layout.html" %}
+{% block content %}
+  <!-- conteudo da pagina -->
+  <main class="conteudo">
+
+    <h1>Salas</h1>
+
+    <section class="cartao">
+      <h2>Salas cadastradas</h2>
+          <!-- filtro -->
+          <form action="{{ url_for('salas') }}" method="get" class="linha">
+            <div>
+              <label for="filtro-edificio">Edifício</label>
+              <select id="filtro-edificio" name="filtro-edificio">
+                <option value="">Todos</option>
+                {% for edificio in edificios %}
+                  <option value="{{ edificio.nome }}" {% if edificio.nome == filtro_edificio %}selected{% endif %}>{{ edificio.nome }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div>
+              <label for="filtro-andar">Andar</label>
+              <select id="filtro-andar" name="filtro-andar">
+                <option value="" {% if filtro_andar is none %}selected{% endif %}>Todos</option>
+                {% for andar in andares %}
+                  <option value="{{ andar }}" {% if andar == filtro_andar %}selected{% endif %}>
+                    {% if andar < 0 %}{{ andar | abs }}º subsolo
+                    {% elif andar == 0 %}Térreo
+                    {% else %}{{ andar }}º andar
+                    {% endif %}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div>
+              <!-- label vazio só para o botão ficar alinhado com os campos -->
+              <label>&nbsp;</label>
+              <button type="submit" class="botao">Filtrar</button>
+            </div>
+          </form>
+      <div class="tabela-rolagem">
+        <table>
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Localização</th>
+              <th>Capacidade</th>
+              <th>Recursos</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sala in salas %}
+            <tr>
+              <td>{{ sala.nome }}</td>
+              <td>{{ sala.edificio.nome }}, {{ sala.andar }}º andar</td>
+              <td>{{ sala.capacidade }}</td>
+              <td>{% if sala.recursos %}{{ sala.recursos | join(", ") }}{% else %}-{% endif %}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="cartao">
+      <h2>Cadastrar nova sala</h2>
+      <form action="{{ url_for('salas') }}" method="POST">
+        {{ form.hidden_tag() }}
+        <div class="linha">
+          <div>
+            {{ form.nome.label }}
+            {{ form.nome(id="codigo", placeholder="Ex.: L105") }}
+            {% for error in form.nome.errors %}
+              <span class="mensagem erro">{{ error }}</span>
+            {% endfor %}
+          </div>
+          <div>
+            {{ form.capacidade.label }}
+            {{ form.capacidade(min="2") }}
+            {% for error in form.capacidade.errors %}
+              <span class="mensagem erro">{{ error }}</span>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="linha">
+          <div>
+            {{ form.edificio_id.label }}
+            {{ form.edificio_id(id="edificio") }}
+            {% for error in form.edificio_id.errors %}
+              <span class="mensagem erro">{{ error }}</span>
+            {% endfor %}
+          </div>
+          <div>
+            {{ form.andar.label }}
+            {{ form.andar(id="andar") }}
+            {% for error in form.andar.errors %}
+              <span class="mensagem erro">{{ error }}</span>
+            {% endfor %}
+          </div>
+        </div>
+
+        {{ form.recursos.label }}
+        <p>
+          {% for recurso in form.recursos %}
+            <label class="opcao">{{ recurso() }} {{ recurso.label.text }}</label>
+          {% endfor %}
+          {% for error in form.recursos.errors %}
+            <span class="mensagem erro">{{ error }}</span>
+          {% endfor %}
+        </p>
+
+        {{ form.submit(class="botao") }}
+      </form>
+    </section>
+
+    <section class="cartao">
+      <h2>Edifícios</h2>
+      <div class="tabela-rolagem">
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Salas cadastradas</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for edificio, count in edificios_com_contagem.items() %}
+            <tr><td>{{ edificio }}</td><td>{{ count }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <form action="{{ url_for('salas') }}" method="get" style="margin-top: 16px;">
+        <label for="nome-edificio">Novo edifício</label>
+        <input type="text" id="nome-edificio" name="nome-edificio" placeholder="Ex.: Edifício Cardeal Leme" required>
+                <!-- negativo é subsolo, 0 terreo -->
+        <div class="linha">
+          <div>
+            <label for="andar-inicial">Do andar</label>
+            <input type="number" id="andar-inicial" name="andar-inicial" placeholder="Ex.: -1 (subsolo)" required>
+          </div>
+          <div>
+            <label for="andar-final">Até o andar</label>
+            <input type="number" id="andar-final" name="andar-final" placeholder="Ex.: 10" required>
+          </div>
+        </div>
+        <button type="submit" class="botao">Cadastrar edifício</button>
+      </form>
+    </section>
+  </main>
+{% endblock %}

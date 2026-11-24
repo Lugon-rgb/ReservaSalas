@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <!--pra usar no celular-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% set titles = {
+  'home': 'Início',
+  'reservar': 'Reservar sala',
+  'minhas_reservas': 'Minhas reservas',
+  'salas': 'Salas',
+  'atendimento': 'Atendimento',
+  'bloqueios': 'Bloqueios',
+  'usuarios': 'Usuários',
+  'relatorios': 'Relatórios'
+  } %}
+  <title>{{ titles.get(request.endpoint, 'Reserva de Salas') }} · Reserva de Salas</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <header class="cabecalho">
+    <a class="marca" href="{{ url_for('home') }}"> PUC-RJ <span>Reserva de Salas</span></a>
+    <div class="usuario">
+      {% if current_user.is_authenticated %}
+        {% set tipos_conta = {
+          'user': 'Estudante',
+          'estudante': 'Estudante',
+          'admin': 'Administrador',
+          'administrador': 'Administrador',
+          'atendente': 'Atendente'
+        } %}
+        {{ current_user.nome }} ({{ tipos_conta.get(current_user.type, current_user.type) }})
+      {% else %}
+        Visitante (Não autenticado)
+      {% endif %}
+      <a href="{{ url_for('logout') }}">Sair</a>
+    </div>
+  </header>
+
+  <nav class="menu">
+    {% if tem_permissao("CONSULTAR") %}
+      <a href="{{ url_for('home') }}" {% if request.endpoint == 'home' %}class="ativo"{% endif %}>Início</a>
+      <a href="{{ url_for('salas') }}" {% if request.endpoint == 'salas' %}class="ativo"{% endif %}>Salas</a>
+    {% endif %}
+    {% if tem_permissao("RESERVAR") %}
+      <a href="{{ url_for('reservar') }}" {% if request.endpoint == 'reservar' %}class="ativo"{% endif %}>Reservar sala</a>
+    {% endif %}
+    {% if tem_permissao("LISTAR_RESERVAS") %}
+      <a href="{{ url_for('minhas_reservas') }}" {% if request.endpoint == 'minhas_reservas' %}class="ativo"{% endif %}>Minhas reservas</a>
+    {% endif %}
+    {% if tem_permissao("ATENDER") %}
+      <a href="{{ url_for('atendimento') }}" {% if request.endpoint == 'atendimento' %}class="ativo"{% endif %}>Atendimento</a>
+    {% endif %}
+    {% if tem_permissao("ADMINISTRAR") %}
+      <a href="{{ url_for('bloqueios') }}" {% if request.endpoint == 'bloqueios' %}class="ativo"{% endif %}>Bloqueios</a>
+      <a href="{{ url_for('usuarios') }}" {% if request.endpoint == 'usuarios' %}class="ativo"{% endif %}>Usuários</a>
+    {% endif %}
+    {% if tem_permissao("RELATORIO") %}
+      <a href="{{ url_for('relatorios') }}" {% if request.endpoint == 'relatorios' %}class="ativo"{% endif %}>Relatórios</a>
+    {% endif %}
+  </nav>
+  {% block content %}{% endblock %}
+  <footer class="rodape">
+    INF1040 - Projeto de Programação Modular | Grupo 7 | 2026.2
+  </footer>
+
+</body>
+</html>

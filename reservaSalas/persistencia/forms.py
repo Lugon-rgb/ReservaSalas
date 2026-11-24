@@ -1,5 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import (
+    DateTimeLocalField,
+    HiddenField,
+    TextAreaField,
     IntegerField,
     StringField,
     PasswordField,
@@ -83,4 +86,38 @@ class SalaForm(FlaskForm):
     def validate_nome(self, nome):
         if Sala.query.filter_by(nome=nome.data).first():
             raise ValidationError('Nome da sala já cadastrado. Por favor, escolha outro nome.')
-        
+
+
+class ReservaForm(FlaskForm):
+    sala_id = HiddenField(validators=[DataRequired()])
+    inicio = HiddenField(validators=[DataRequired()])
+    duracao = HiddenField(validators=[DataRequired()])
+    grupo = HiddenField(validators=[DataRequired()])
+    recursos = HiddenField()
+    submit_reservar = SubmitField('Reservar')
+
+
+class CancelarReservaForm(FlaskForm):
+    reserva_id = SelectField('Reserva', coerce=opcional_inteiro, validators=[DataRequired()])
+    motivo = TextAreaField('Motivo do cancelamento',
+                           validators=[DataRequired(message='O motivo é obrigatório.'),
+                                       Length(max=200)])
+    submit_cancelar = SubmitField('Confirmar cancelamento')
+
+
+class AtendimentoForm(FlaskForm):
+    reserva_id = HiddenField(validators=[DataRequired()])
+    acao = HiddenField(validators=[DataRequired()])
+
+
+class BloqueioForm(FlaskForm):
+    sala_id = SelectField('Sala', coerce=opcional_inteiro, validators=[DataRequired()])
+    inicio = DateTimeLocalField('Início', format='%Y-%m-%dT%H:%M', validators=[DataRequired()])
+    fim = DateTimeLocalField('Fim', format='%Y-%m-%dT%H:%M', validators=[DataRequired()])
+    motivo = StringField('Motivo', validators=[DataRequired(), Length(max=200)])
+    submit_bloqueio = SubmitField('Criar bloqueio')
+
+
+class RetirarBloqueioForm(FlaskForm):
+    bloqueio_id = HiddenField(validators=[DataRequired()])
+    submit_retirar = SubmitField('Retirar bloqueio')

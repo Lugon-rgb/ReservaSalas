@@ -10,40 +10,47 @@
       Depois disso, a reserva vira <strong>FALTA</strong> e a sala é liberada.
     </div>
 
+    {% with mensagens = get_flashed_messages(with_categories=true) %}
+      {% for categoria, mensagem in mensagens %}
+        <div class="mensagem {{ 'erro' if categoria == 'danger' else ('sucesso' if categoria == 'sucesso' else categoria) }}">{{ mensagem }}</div>
+      {% endfor %}
+    {% endwith %}
+
     <section class="cartao">
-      <h2>Reservas de hoje</h2>
+      <h2>Reservas de {{ data_filtro.strftime('%d/%m/%Y') }}</h2>
       <!-- filtro por data, edificio, andar e sala -->
       <form action="{{ url_for('atendimento') }}" method="get" class="linha">
         <div>
           <label for="data">Data</label>
-          <input type="date" id="data" name="data" value="2026-11-24">
+          <input type="date" id="data" name="data" value="{{ data_filtro.isoformat() }}">
         </div>
         <div>
           <label for="edificio">Edifício</label>
           <select id="edificio" name="edificio">
             <option value="">Todos</option>
-            <option>Edifício Frings</option>
-            <option>Edifício Kennedy</option>
-            <option>Edifício Leme</option>
+            {% for edificio in edificios %}
+              <option {% if filtros.edificio == edificio.nome %}selected{% endif %}>{{ edificio.nome }}</option>
+            {% endfor %}
           </select>
         </div>
         <div>
           <label for="andar">Andar</label>
           <select id="andar" name="andar">
             <option value="">Todos</option>
-            <option value="-1">-1 subsolo</option>
-            <option value="0">0 Térreo</option>
-            <option value="1">1º andar</option>
+            {% for andar in andares %}
+              <option value="{{ andar }}" {% if filtros.andar == andar %}selected{% endif %}>
+                {% if andar < 0 %}{{ -andar }}º subsolo{% elif andar == 0 %}Térreo{% else %}{{ andar }}º andar{% endif %}
+              </option>
+            {% endfor %}
           </select>
         </div>
         <div>
           <label for="sala">Sala</label>
           <select id="sala" name="sala">
             <option value="">Todas</option>
-            <option>F305</option>
-            <option>K210</option>
-            <option>L101</option>
-            <option>L104</option>
+            {% for sala in salas %}
+              <option {% if filtros.sala == sala.nome %}selected{% endif %}>{{ sala.nome }}</option>
+            {% endfor %}
           </select>
         </div>
         <div>
@@ -53,6 +60,14 @@
         </div>
       </form>
 
+      {% set nomes_situacao = {
+        'CONFIRMADA': ('confirmada', 'CONFIRMADA'),
+        'EM_USO': ('em-uso', 'EM USO'),
+        'CONCLUIDA': ('concluida', 'CONCLUÍDA'),
+        'FALTA': ('falta', 'FALTA'),
+        'CANCELADA': ('cancelada', 'CANCELADA')
+      } %}
+      {% if reservas %}
       <div class="tabela-rolagem">
         <table>
           <thead>
@@ -66,41 +81,42 @@
             </tr>
           </thead>
           <tbody>
+            {% for reserva in reservas %}
+            {% set classe, texto = nomes_situacao.get(reserva.situacao, ('', reserva.situacao)) %}
             <tr>
-              <td>08:00 – 09:00</td>
-              <td>L101</td>
-              <td>Bruno Lima (2410001)</td>
-              <td>3</td>
-              <td><span class="situacao concluida">CONCLUÍDA</span></td>
-              <td>Entrada 08:05 · Saída 08:55</td>
+              <td>{{ reserva.data_hora_inicio.strftime('%H:%M') }} – {{ reserva.data_hora_fim.strftime('%H:%M') }}</td>
+              <td>{{ reserva.sala.nome }}</td>
+              <td>{{ nomes.get(reserva.user_matricula, '?') }} ({{ reserva.user_matricula }})</td>
+              <td>{{ reserva.grupo_size }}</td>
+              <td><span class="situacao {{ classe }}">{{ texto }}</span></td>
+              <td>
+                {% if reserva.situacao in ('CONFIRMADA', 'EM_USO') %}
+                  <!-- um formulário pequeno por botão -->
+                  <form method="POST" action="{{ request.full_path }}">
+                    {{ form.csrf_token }}
+                    <input type="hidden" name="reserva_id" value="{{ reserva.id }}">
+                    {% if reserva.situacao == 'CONFIRMADA' %}
+                      <input type="hidden" name="acao" value="entrada">
+                      <button type="submit" class="botao pequeno">Registrar entrada</button>
+                    {% else %}
+                      <input type="hidden" name="acao" value="saida">
+                      <button type="submit" class="botao secundario pequeno">Registrar saída</button>
+                    {% endif %}
+                  </form>
+                {% elif reserva.situacao == 'CONCLUIDA' and reserva.entrada and reserva.saida %}
+                  Entrada {{ reserva.entrada.strftime('%H:%M') }} · Saída {{ reserva.saida.strftime('%H:%M') }}
+                {% else %}
+                  —
+                {% endif %}
+              </td>
             </tr>
-            <tr>
-              <td>09:00 – 10:00</td>
-              <td>K210</td>
-              <td>Carla Dias (2410002)</td>
-              <td>5</td>
-              <td><span class="situacao falta">FALTA</span></td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td>09:30 – 11:00</td>
-              <td>L104</td>
-              <td>Diego Alves (2410003)</td>
-              <td>4</td>
-              <td><span class="situacao em-uso">EM USO</span></td>
-              <td><a class="botao secundario pequeno" href="{{ url_for('atendimento') }}">Registrar saída</a></td>
-            </tr>
-            <tr>
-              <td>10:00 – 11:00</td>
-              <td>F305</td>
-              <td>Elisa Rocha (2410004)</td>
-              <td>2</td>
-              <td><span class="situacao confirmada">CONFIRMADA</span></td>
-              <td><a class="botao pequeno" href="{{ url_for('atendimento') }}">Registrar entrada</a></td>
-            </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
+      {% else %}
+        <p>Nenhuma reserva para esse dia e filtros.</p>
+      {% endif %}
     </section>
   </main>
 {% endblock %}

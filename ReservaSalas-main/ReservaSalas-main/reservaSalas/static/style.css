@@ -1,0 +1,297 @@
+
+
+/* cores */
+:root {
+  --azul-escuro: #0b2d5b;   /* azul-marinho principal (cabeçalho, botões) */
+  --azul-medio:  #1f5aa6;   /* azul de links e destaques */
+  --azul-claro:  #e8eef7;   /* fundo de caixas e tabelas */
+  --cinza-fundo: #f4f6f9;   /* fundo da página */
+  --cinza-borda: #d5dbe3;   /* bordas finas */
+  --texto:       #1e2a3a;   /* cor do texto normal */
+  --branco:      #ffffff;
+
+  /* cores das situações da reserva */
+  --verde:    #2e7d32;  /* CONFIRMADA / CONCLUÍDA */
+  --laranja:  #e08a00;  /* EM USO */
+  --vermelho: #c62828;  /* CANCELADA / FALTA / ERROS */
+  --cinza:    #6b7785;  /* neutro */
+}
+
+/* pagina*/
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--cinza-fundo);
+  color: var(--texto);
+  line-height: 1.5;
+}
+
+a {
+  color: var(--azul-medio);
+}
+
+h1, h2 {
+  color: var(--azul-escuro);
+}
+
+/* cabeçalho */
+.cabecalho {
+  background: var(--azul-escuro);
+  color: var(--branco);
+  padding: 14px 24px;
+  display: flex;                  /* coloca os itens lado a lado */
+  justify-content: space-between; /* título à esquerda, usuário à direita */
+  align-items: center;
+  flex-wrap: wrap;                /* quebra a linha em telas pequenas */
+  gap: 8px;
+}
+
+.cabecalho .marca {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--branco);
+  text-decoration: none;
+}
+
+.cabecalho .marca span {
+  font-weight: normal;
+  opacity: 0.8;
+}
+
+.cabecalho .usuario {
+  font-size: 14px;
+}
+
+.cabecalho .usuario a {
+  color: var(--branco);
+  margin-left: 12px;
+}
+
+/* menu de navegação */
+.menu {
+  background: var(--branco);
+  border-bottom: 3px solid var(--azul-escuro);
+  padding: 0 24px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.menu a {
+  padding: 12px 14px;
+  color: var(--azul-escuro);
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.menu a:hover {
+  background: var(--azul-claro);
+}
+
+/* página atual fica destacada*/
+.menu a.ativo {
+  background: var(--azul-escuro);
+  color: var(--branco);
+}
+
+/* conteúdo principal */
+.conteudo {
+  max-width: 1000px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+/* caixa branca com borda: usada para formulários, tabelas, etc */
+.cartao {
+  background: var(--branco);
+  border: 1px solid var(--cinza-borda);
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.cartao h2 {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+/* grade de cartões do painel inicial */
+.grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.grade .cartao {
+  margin-bottom: 0;
+}
+
+.grade .cartao p {
+  color: var(--cinza);
+  font-size: 14px;
+}
+
+/* formulários */
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--cinza-borda);
+  border-radius: 4px;
+  font-size: 15px;
+  font-family: inherit;
+  margin-bottom: 14px;
+}
+
+/* checkbox */
+input[type="checkbox"] {
+  width: auto;
+  margin: 0 6px 0 0;
+}
+
+.opcao {
+  display: inline-block;
+  font-weight: normal;
+  margin-right: 16px;
+}
+
+/* duas ou mais colunas de campos lado a lado */
+.linha {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0 16px;
+}
+
+/* botões */
+.botao {
+  display: inline-block;
+  background: var(--azul-escuro);
+  color: var(--branco);
+  border: none;
+  border-radius: 4px;
+  padding: 9px 18px;
+  font-size: 15px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.botao:hover {
+  background: var(--azul-medio);
+}
+
+/* variações de botão */
+.botao.secundario {
+  background: var(--branco);
+  color: var(--azul-escuro);
+  border: 1px solid var(--azul-escuro);
+}
+
+.botao.perigo {
+  background: var(--vermelho);
+}
+
+.botao.pequeno {
+  padding: 5px 10px;
+  font-size: 13px;
+}
+
+/* tabelas*/
+.tabela-rolagem {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th {
+  background: var(--azul-escuro);
+  color: var(--branco);
+  text-align: left;
+  padding: 10px;
+}
+
+td {
+  padding: 10px;
+  border-bottom: 1px solid var(--cinza-borda);
+}
+
+tr:nth-child(even) td {
+  background: var(--azul-claro); /* linhas "zebradas" */
+}
+
+/* situação da reserva*/
+.situacao {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  color: var(--branco);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.situacao.confirmada { background: var(--azul-medio); }
+.situacao.em-uso     { background: var(--laranja); }
+.situacao.concluida  { background: var(--verde); }
+.situacao.cancelada  { background: var(--vermelho); }
+.situacao.falta      { background: var(--cinza); }
+.situacao.ativo      { background: var(--vermelho); }
+
+/* mensagens (avisos, erros, sucesso) */
+.mensagem {
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  border-left: 5px solid;
+}
+
+.mensagem.info    { background: var(--azul-claro); border-color: var(--azul-medio); }
+.mensagem.sucesso { background: #e8f5e9; border-color: var(--verde); }
+.mensagem.erro    { background: #fdecea; border-color: var(--vermelho); }
+
+/* página de login */
+.pagina-login {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--azul-escuro);
+  padding: 16px;
+}
+
+.caixa-login {
+  background: var(--branco);
+  padding: 32px;
+  border-radius: 6px;
+  width: 100%;
+  max-width: 380px;
+}
+
+.caixa-login h1 {
+  margin-top: 0;
+  font-size: 22px;
+  text-align: center;
+}
+
+.caixa-login .botao {
+  width: 100%;
+}
+
+/* rodapé */
+.rodape {
+  text-align: center;
+  color: var(--cinza);
+  font-size: 13px;
+  padding: 24px;
+}

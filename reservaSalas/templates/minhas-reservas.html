@@ -11,10 +11,11 @@
       a reserva vira <strong>FALTA</strong> e a sala é liberada.
     </div>
 
-    <!-- mensagem de sucesso -->
-    <div class="mensagem sucesso">
-      Reserva confirmada: sala <strong>L104</strong>, 25/11/2026, das 10:00 às 11:30.
-    </div>
+    {% with mensagens = get_flashed_messages(with_categories=true) %}
+      {% for categoria, mensagem in mensagens %}
+        <div class="mensagem {{ 'erro' if categoria == 'danger' else ('sucesso' if categoria == 'sucesso' else categoria) }}">{{ mensagem }}</div>
+      {% endfor %}
+    {% endwith %}
 
     <section class="cartao">
       <h2>Histórico</h2>
@@ -25,20 +26,17 @@
         <div>
           <label for="periodo">Mostrar</label>
           <select id="periodo" name="periodo">
-            <option value="proximas" selected>Próximas</option>
-            <option value="anteriores">Anteriores</option>
-            <option value="todas">Todas</option>
+            {% for valor, texto in [("proximas", "Próximas"), ("anteriores", "Anteriores"), ("todas", "Todas")] %}
+              <option value="{{ valor }}" {% if filtros.periodo == valor %}selected{% endif %}>{{ texto }}</option>
+            {% endfor %}
           </select>
         </div>
         <div>
           <label for="situacao">Situação</label>
           <select id="situacao" name="situacao">
-            <option value="">Todas</option>
-            <option value="CONFIRMADA">Confirmada</option>
-            <option value="EM_USO">Em uso</option>
-            <option value="CONCLUIDA">Concluída</option>
-            <option value="FALTA">Falta</option>
-            <option value="CANCELADA">Cancelada</option>
+            {% for valor, texto in [("", "Todas"), ("CONFIRMADA", "Confirmada"), ("EM_USO", "Em uso"), ("CONCLUIDA", "Concluída"), ("FALTA", "Falta"), ("CANCELADA", "Cancelada")] %}
+              <option value="{{ valor }}" {% if filtros.situacao == valor %}selected{% endif %}>{{ texto }}</option>
+            {% endfor %}
           </select>
         </div>
         <div>
@@ -48,6 +46,14 @@
         </div>
       </form>
 
+      {% set nomes_situacao = {
+        'CONFIRMADA': ('confirmada', 'CONFIRMADA'),
+        'EM_USO': ('em-uso', 'EM USO'),
+        'CONCLUIDA': ('concluida', 'CONCLUÍDA'),
+        'FALTA': ('falta', 'FALTA'),
+        'CANCELADA': ('cancelada', 'CANCELADA')
+      } %}
+      {% if reservas %}
       <div class="tabela-rolagem">
         <table>
           <thead>
@@ -55,72 +61,65 @@
               <th>Data</th>
               <th>Horário</th>
               <th>Sala</th>
+              {% if perfil != 'estudante' %}<th>Responsável</th>{% endif %}
               <th>Grupo</th>
               <th>Situação</th>
               <th>Ação</th>
             </tr>
           </thead>
           <tbody>
+            {% for reserva in reservas %}
+            {% set classe, texto = nomes_situacao.get(reserva.situacao, ('', reserva.situacao)) %}
             <tr>
-              <td>25/11/2026</td>
-              <td>10:00 – 11:30</td>
-              <td>L104</td>
-              <td>4</td>
-              <td><span class="situacao confirmada">CONFIRMADA</span></td>
-              <td><a class="botao perigo pequeno" href="#cancelar">Cancelar</a></td>
+              <td>{{ reserva.data_hora_inicio.strftime('%d/%m/%Y') }}</td>
+              <td>{{ reserva.data_hora_inicio.strftime('%H:%M') }} – {{ reserva.data_hora_fim.strftime('%H:%M') }}</td>
+              <td>{{ reserva.sala.nome }}</td>
+              {% if perfil != 'estudante' %}
+                <td>{{ nomes.get(reserva.user_matricula, '?') }} ({{ reserva.user_matricula }})</td>
+              {% endif %}
+              <td>{{ reserva.grupo_size }}</td>
+              <td><span class="situacao {{ classe }}">{{ texto }}</span></td>
+              <td>
+                {% if reserva.id in ids_cancelaveis and tem_permissao("CANCELAR") %}
+                  <a class="botao perigo pequeno" href="{{ url_for('minhas_reservas', cancelar=reserva.id, _anchor='cancelar') }}">Cancelar</a>
+                {% elif reserva.situacao == 'CANCELADA' %}
+                  Motivo: {{ reserva.motivo_cancelamento }}
+                {% else %}
+                  —
+                {% endif %}
+              </td>
             </tr>
-            <tr>
-              <td>27/11/2026</td>
-              <td>14:00 – 16:00</td>
-              <td>K210</td>
-              <td>6</td>
-              <td><span class="situacao confirmada">CONFIRMADA</span></td>
-              <td><a class="botao perigo pequeno" href="#cancelar">Cancelar</a></td>
-            </tr>
-            <tr>
-              <td>20/11/2026</td>
-              <td>09:00 – 10:00</td>
-              <td>L101</td>
-              <td>3</td>
-              <td><span class="situacao concluida">CONCLUÍDA</span></td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td>18/11/2026</td>
-              <td>15:00 – 16:30</td>
-              <td>L104</td>
-              <td>5</td>
-              <td><span class="situacao falta">FALTA</span></td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td>17/11/2026</td>
-              <td>11:00 – 12:00</td>
-              <td>K210</td>
-              <td>4</td>
-              <td><span class="situacao cancelada">CANCELADA</span></td>
-              <td>Motivo: prova remarcada</td>
-            </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
+      {% else %}
+        <p>Nenhuma reserva encontrada com esses filtros.</p>
+      {% endif %}
     </section>
 
     <!-- motivo é obrigatório (RN06). -->
+    <!-- atendente não cancela reservas (só o responsável ou o administrador) -->
+    {% if tem_permissao("CANCELAR") %}
     <section class="cartao" id="cancelar">
       <h2>Cancelar reserva</h2>
-      <form action="{{ url_for('minhas_reservas') }}" method="get">
-        <label for="reserva">Reserva</label>
-        <select id="reserva" name="reserva">
-          <option>L104 · 25/11/2026 · 10:00 – 11:30</option>
-          <option>K210 · 27/11/2026 · 14:00 – 16:00</option>
-        </select>
+      <form action="{{ url_for('minhas_reservas') }}" method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.reserva_id.label(for="reserva") }}
+        {{ form.reserva_id(id="reserva") }}
+        {% for error in form.reserva_id.errors %}
+          <span class="mensagem erro">{{ error }}</span>
+        {% endfor %}
 
-        <label for="motivo">Motivo do cancelamento</label>
-        <textarea id="motivo" name="motivo" rows="3" placeholder="Obrigatório"></textarea>
+        {{ form.motivo.label(for="motivo") }}
+        {{ form.motivo(id="motivo", rows="3", placeholder="Obrigatório") }}
+        {% for error in form.motivo.errors %}
+          <span class="mensagem erro">{{ error }}</span>
+        {% endfor %}
 
-        <button type="submit" class="botao perigo">Confirmar cancelamento</button>
+        {{ form.submit_cancelar(class="botao perigo", style="width: auto;") }}
       </form>
     </section>
+    {% endif %}
   </main>
 {% endblock %}

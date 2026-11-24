@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+{% block content %}
+  <!-- conteudo da pagina -->
+  <main class="conteudo">
+
+    <h1>Usuários</h1>
+
+    <section class="cartao">
+      <h2>Cadastrar usuário</h2>
+      {% with mensagens = get_flashed_messages(with_categories=true) %}
+        {% for categoria, mensagem in mensagens %}
+          <div class="mensagem {{ 'erro' if categoria == 'danger' else ('sucesso' if categoria == 'sucesso' else categoria) }}">{{ mensagem }}</div>
+        {% endfor %}
+      {% endwith %}
+
+      <form method="POST" action="{{ url_for('usuarios') }}">
+        {{ form.hidden_tag() }}
+        <div class="linha">
+          <div>
+            {{ form.matricula.label(for="matricula") }}
+            {{ form.matricula(id="matricula", placeholder="Obrigatório") }}
+            {% for error in form.matricula.errors %}
+              <span class="mensagem erro">{{ error }}</span>
+            {% endfor %}
+          </div>
+          <div>
+            {{ form.type.label(for="perfil") }}
+            {{ form.type(id="perfil") }}
+            {% for error in form.type.errors %}
+              <span class="mensagem erro">{{ error }}</span>
+            {% endfor %}
+          </div>
+        </div>
+
+        {{ form.nome.label(for="nome") }}
+        {{ form.nome(id="nome", placeholder="Obrigatório") }}
+        {% for error in form.nome.errors %}
+          <span class="mensagem erro">{{ error }}</span>
+        {% endfor %}
+
+        {{ form.password.label(for="senha") }}
+        {{ form.password(id="senha", placeholder="Obrigatório") }}
+        {% for error in form.password.errors %}
+          <span class="mensagem erro">{{ error }}</span>
+        {% endfor %}
+
+        {{ form.submit(class="botao") }}
+      </form>
+    </section>
+
+    <!-- a senha nao aparece na lista (RNF02) -->
+    <section class="cartao">
+      <h2>Usuários cadastrados</h2>
+      <div class="tabela-rolagem">
+
+      <!-- filtro de matricula, nome e perfil -->
+      <form action="{{ url_for('usuarios') }}" method="get" class="linha">
+        <div>
+          <label for="filtro-matricula">Matrícula</label>
+          <input type="text" id="filtro-matricula" name="filtro-matricula" placeholder="Digite a matrícula" value="{{ filtro_matricula }}">
+        </div>
+        <div>
+          <label for="filtro-nome">Nome</label>
+          <input type="search" id="filtro-nome" name="filtro-nome" placeholder="Digite o nome" value="{{ filtro_nome }}">
+        </div>
+        <div>
+          <label for="filtro-perfil">Perfil</label>
+          <select id="filtro-perfil" name="filtro-perfil">
+            <option value="all" {% if filtro_perfil == "all" %}selected{% endif %}>Todos</option>
+            <option value="estudante" {% if filtro_perfil == "estudante" %}selected{% endif %}>Estudante</option>
+            <option value="atendente" {% if filtro_perfil == "atendente" %}selected{% endif %}>Atendente</option>
+            <option value="administrador" {% if filtro_perfil == "administrador" %}selected{% endif %}>Administrador</option>
+          </select>
+        </div>
+        <div>
+          <!-- label vazio só para o botão ficar alinhado com os campos -->
+          <label>&nbsp;</label>
+          <button type="submit" class="botao">Filtrar</button>
+        </div>
+      </form>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Matrícula</th>
+              <th>Nome</th>
+              <th>Perfil</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in usuarios %}
+            <tr><td>{{ user.matricula }}</td><td>{{ user.nome }}</td><td>{{ perfis.get(user.type, user.type) }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+{% endblock %}

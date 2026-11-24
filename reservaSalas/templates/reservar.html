@@ -12,6 +12,14 @@
       O grupo deve ter no mínimo <strong>2 pessoas</strong>.
     </div>
 
+
+    <!-- mensagens de erro ao reservar (RNF04: dizer a causa da recusa) -->
+    {% with mensagens = get_flashed_messages(with_categories=true) %}
+      {% for categoria, mensagem in mensagens %}
+        <div class="mensagem {{ 'erro' if categoria == 'danger' else ('sucesso' if categoria == 'sucesso' else categoria) }}">{{ mensagem }}</div>
+      {% endfor %}
+    {% endwith %}
+
     <!-- consultar disponibilidade (RF04) -->
     <section class="cartao">
       <h2>1. Consultar salas disponíveis</h2>
@@ -20,23 +28,23 @@
         <div class="linha">
           <div>
             <label for="data">Data</label>
-            <input type="date" id="data" name="data" value="2026-11-25" required>
+            <input type="date" id="data" name="data" value="{{ consulta.data }}" required>
           </div>
-                    <div>
+          <div>
             <label for="inicio-hora">Início</label>
             <!-- duas listas, hora e minuto -->
             <div class="linha" style="grid-template-columns: 1fr 1fr; gap: 0 8px;">
               <select id="inicio-hora" name="inicio-hora" required>
                 {% for hora in range(8, 22) %}
                   {% set hora_formatada = "%02d"|format(hora) %}
-                  <option value="{{ hora_formatada }}" {% if hora == 10 %}selected{% endif %}>
+                  <option value="{{ hora_formatada }}" {% if hora_formatada == consulta.hora %}selected{% endif %}>
                     {{ hora_formatada }}h
                   </option>
                 {% endfor %}
               </select>
               <select id="inicio-minuto" name="inicio-minuto" required>
-                <option value="00" selected>00</option>
-                <option value="30">30</option>
+                <option value="00" {% if consulta.minuto == "00" %}selected{% endif %}>00</option>
+                <option value="30" {% if consulta.minuto == "30" %}selected{% endif %}>30</option>
               </select>
             </div>
           </div>
@@ -44,36 +52,39 @@
             <label for="duracao">Duração</label>
             <!-- dura de 30 a 120 minutos (RN01)-->
             <select id="duracao" name="duracao" required>
-              <option value="30">30 minutos</option>
-              <option value="60">1 hora</option>
-              <option value="90" selected>1 hora e 30</option>
-              <option value="120">2 horas</option>
+              {% for minutos, texto in [("30", "30 minutos"), ("60", "1 hora"), ("90", "1 hora e 30"), ("120", "2 horas")] %}
+                <option value="{{ minutos }}" {% if consulta.duracao == minutos %}selected{% endif %}>{{ texto }}</option>
+              {% endfor %}
             </select>
           </div>
           
           <div>
             <label for="grupo">Pessoas no grupo</label>
-            <input type="number" id="grupo" name="grupo" value="4" min="2" required>
+            <input type="number" id="grupo" name="grupo" value="{{ consulta.grupo }}" min="2" required>
           </div>
         </div>
 
         <label>Recursos necessários</label>
+
         <p>
-          <label class="opcao"><input type="checkbox" name="recursos" value="quadro" checked> Quadro branco</label>
-          <label class="opcao"><input type="checkbox" name="recursos" value="tv"> TV</label>
-          <label class="opcao"><input type="checkbox" name="recursos" value="projetor"> Projetor</label>
-          <label class="opcao"><input type="checkbox" name="recursos" value="computador"> Computador</label>
+          {% for recurso in ["Quadro branco", "TV", "Projetor", "Computador"] %}
+            <label class="opcao"><input type="checkbox" name="recursos" value="{{ recurso }}" {% if recurso in consulta.recursos %}checked{% endif %}> {{ recurso }}</label>
+          {% endfor %}
         </p>
+
 
         <button type="submit" class="botao">Consultar</button>
       </form>
     </section>
 
-    <!-- resultado da consulta -->
+    {% if erro %}
+      <div class="mensagem erro">{{ erro }}</div>
+    {% elif salas_livres is not none %}
     <section class="cartao">
-      <h2>2. Salas livres em 25/11/2026, das 10:00 às 11:30</h2>
-      <p>O horário <strong>ainda não está reservado</strong> Clique em "Reservar" para confirmar.</p>
+      <h2>2. Salas livres em {{ inicio.strftime('%d/%m/%Y') }}, das {{ inicio.strftime('%H:%M') }} às {{ fim.strftime('%H:%M') }}</h2>
+      <p>O horário <strong>ainda não está reservado</strong>. Clique em "Reservar" para confirmar.</p>
 
+      {% if salas_livres %}
       <div class="tabela-rolagem">
         <table>
           <thead>
@@ -86,35 +97,41 @@
             </tr>
           </thead>
           <tbody>
+            {% for sala in salas_livres %}
             <tr>
-              <td>L101</td>
-              <td>Edifício Leme, 1º andar</td>
-              <td>4 pessoas</td>
-              <td>Quadro branco</td>
-              <td><a class="botao pequeno" href="{{ url_for('minhas_reservas') }}?nova=1">Reservar</a></td>
+              <td>{{ sala.nome }}</td>
+              <td>
+                {{ sala.edificio.nome }},
+                {% if sala.andar < 0 %}{{ -sala.andar }}º subsolo{% elif sala.andar == 0 %}Térreo{% else %}{{ sala.andar }}º andar{% endif %}
+              </td>
+              <td>{{ sala.capacidade }} pessoas</td>
+              <td>
+                {% if sala.recursos %}
+                  {{ sala.recursos|join(", ") }}
+                {% else %}
+                  —
+                {% endif %}
+              </td>
+              <td>
+                <form method="POST" action="{{ url_for('reservar') }}">
+                  {{ form.csrf_token }}  {# só o token de segurança; os outros campos estão logo abaixo #}
+                  <input type="hidden" name="sala_id" value="{{ sala.id }}">
+                  <input type="hidden" name="inicio" value="{{ inicio.strftime('%Y-%m-%dT%H:%M') }}">
+                  <input type="hidden" name="duracao" value="{{ consulta.duracao }}">
+                  <input type="hidden" name="grupo" value="{{ consulta.grupo }}">
+                  <input type="hidden" name="recursos" value="{{ consulta.recursos|join(',') }}">
+                  <button type="submit" name="submit_reservar" value="Reservar" class="botao pequeno">Reservar</button>
+                </form>
+              </td>
             </tr>
-            <tr>
-              <td>L104</td>
-              <td>Edifício Leme, 1º andar</td>
-              <td>6 pessoas</td>
-              <td>Quadro branco, TV</td>
-              <td><a class="botao pequeno" href="{{ url_for('minhas_reservas') }}?nova=1">Reservar</a></td>
-            </tr>
-            <tr>
-              <td>K210</td>
-              <td>Edifício Kennedy, 2º andar</td>
-              <td>8 pessoas</td>
-              <td>Quadro branco, Projetor, Computador</td>
-              <td><a class="botao pequeno" href="{{ url_for('minhas_reservas') }}?nova=1">Reservar</a></td>
-            </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
+      {% else %}
+        <p>Nenhuma sala livre para esse horário, tamanho de grupo e recursos.</p>
+      {% endif %}
     </section>
-
-    <!--erro (RNF04: dizer a causa da recusa) -->
-    <div class="mensagem erro">
-      <strong>LIMITE ATINGIDO:</strong> você já tem 2 reservas confirmadas. Cancele uma delas para reservar outra.
-    </div>
+    {% endif %}
   </main>
 {% endblock %}

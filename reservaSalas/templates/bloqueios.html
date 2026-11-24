@@ -10,33 +10,47 @@
       são <strong>canceladas</strong>. Retirar o bloqueio depois <strong>não</strong> devolve essas reservas.
     </div>
 
+    {% with mensagens = get_flashed_messages(with_categories=true) %}
+      {% for categoria, mensagem in mensagens %}
+        <div class="mensagem {{ 'erro' if categoria == 'danger' else ('sucesso' if categoria == 'sucesso' else categoria) }}">{{ mensagem }}</div>
+      {% endfor %}
+    {% endwith %}
+
     <section class="cartao">
       <h2>Criar bloqueio</h2>
-      <form action="{{ url_for('bloqueios') }}" method="get">
-        <label for="sala">Sala</label>
-        <select id="sala" name="sala" required>
-          <option value="">Selecione</option>
-          {% for sala in salas %}
-            <option value="{{ sala.id }}">{{ sala.nome }}</option>
-          {% endfor %}
-        </select>
+      <form action="{{ url_for('bloqueios') }}" method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.sala_id.label(for="sala") }}
+        {{ form.sala_id(id="sala") }}
+        {% for error in form.sala_id.errors %}
+          <span class="mensagem erro">{{ error }}</span>
+        {% endfor %}
 
         <!-- bloqueios podem durar vários dias, por isso data e hora -->
         <div class="linha">
           <div>
-            <label for="inicio">Início</label>
-            <input type="datetime-local" id="inicio" name="inicio" required>
+            {{ form.inicio.label(for="inicio") }}
+            {{ form.inicio(id="inicio") }}
+            {% for error in form.inicio.errors %}
+              <span class="mensagem erro">{{ error }}</span>
+            {% endfor %}
           </div>
           <div>
-            <label for="fim">Fim</label>
-            <input type="datetime-local" id="fim" name="fim" required>
+            {{ form.fim.label(for="fim") }}
+            {{ form.fim(id="fim") }}
+            {% for error in form.fim.errors %}
+              <span class="mensagem erro">{{ error }}</span>
+            {% endfor %}
           </div>
         </div>
 
-        <label for="motivo">Motivo</label>
-        <input type="text" id="motivo" name="motivo" placeholder="Obrigatório" required>
+        {{ form.motivo.label(for="motivo") }}
+        {{ form.motivo(id="motivo", placeholder="Obrigatório") }}
+        {% for error in form.motivo.errors %}
+          <span class="mensagem erro">{{ error }}</span>
+        {% endfor %}
 
-        <button type="submit" class="botao perigo">Criar bloqueio</button>
+        {{ form.submit_bloqueio(class="botao perigo", style="width: auto;") }}
       </form>
     </section>
 
@@ -62,7 +76,9 @@
               <td>{{ bloqueio.data_hora_fim.strftime('%d/%m/%Y %H:%M') }}</td>
               <td>{{ bloqueio.motivo }}</td>
               <td>
-                {% if agora < bloqueio.data_hora_inicio %}
+                {% if bloqueio.situacao == 'CANCELADO' %}
+                  <span class="situacao falta">RETIRADO</span>
+                {% elif agora < bloqueio.data_hora_inicio %}
                   <span class="situacao confirmada">AGENDADO</span>
                 {% elif agora <= bloqueio.data_hora_fim %}
                   <span class="situacao ativo">ATIVO</span>
@@ -70,7 +86,17 @@
                   <span class="situacao falta">ENCERRADO</span>
                 {% endif %}
               </td>
-              <td><a class="botao secundario pequeno" href="{{ url_for('bloqueios') }}">Retirar bloqueio</a></td>
+              <td>
+                {% if bloqueio.situacao == 'ATIVO' and agora <= bloqueio.data_hora_fim %}
+                  <form method="POST" action="{{ url_for('bloqueios') }}">
+                    {{ form_retirar.csrf_token }}
+                    <input type="hidden" name="bloqueio_id" value="{{ bloqueio.id }}">
+                    {{ form_retirar.submit_retirar(class="botao secundario pequeno", style="width: auto; margin: 0;") }}
+                  </form>
+                {% else %}
+                  —
+                {% endif %}
+              </td>
             </tr>
             {% endfor %}
           </tbody>

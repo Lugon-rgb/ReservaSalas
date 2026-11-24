@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% block content %}
+  <!-- conteudo da pagina -->
+  <main class="conteudo">
+
+    {% if current_user.is_authenticated %}
+    <h1>Olá, {{ current_user.nome }}!</h1>
+    {% else %}
+    <h1>Olá, Visitante!</h1>
+    {% endif %}
+    <p>Escolha o que você quer fazer:</p>
+
+    <!-- atalho para as telas -->
+    <div class="grade">
+      {% if tem_permissao("RESERVAR") %}
+      <div class="cartao">
+        <h2>Reservar sala</h2>
+        <p>Veja as salas livres para o seu grupo e faça uma reserva.</p>
+        <a class="botao" href="{{ url_for('reservar') }}">Reservar</a>
+      </div>
+      {% endif %}
+      {% if tem_permissao("LISTAR_RESERVAS") %}
+      <div class="cartao">
+        <h2>Minhas reservas</h2>
+        <p>Acompanhe seu histórico e cancele reservas antes do início.</p>
+        <a class="botao" href="{{ url_for('minhas_reservas') }}">Ver reservas</a>
+      </div>
+      {% endif %}
+      {% if tem_permissao("CONSULTAR") %}
+      <div class="cartao">
+        <h2>Salas</h2>
+        <p>Lista de salas com localização, capacidade e recursos.</p>
+        <a class="botao" href="{{ url_for('salas') }}">Ver salas</a>
+      </div>
+      {% endif %}
+      {% if tem_permissao("ATENDER") %}
+      <div class="cartao">
+        <h2>Atendimento</h2>
+        <p>Registrar entrada e saída dos grupos (atendente).</p>
+        <a class="botao" href="{{ url_for('atendimento') }}">Abrir</a>
+      </div>
+      {% endif %}
+      {% if tem_permissao("ADMINISTRAR") %}
+      <div class="cartao">
+        <h2>Bloqueios</h2>
+        <p>Interditar salas para manutenção (administrador).</p>
+        <a class="botao" href="{{ url_for('bloqueios') }}">Abrir</a>
+      </div>
+      <div class="cartao">
+        <h2>Usuários</h2>
+        <p>Cadastrar estudantes, atendentes e administradores.</p>
+        <a class="botao" href="{{ url_for('usuarios') }}">Abrir</a>
+      </div>
+      {% endif %}
+      {% if tem_permissao("RELATORIO") %}
+      <div class="cartao">
+        <h2>Relatórios</h2>
+        <p>Reservas por situação e minutos de uso por sala.</p>
+        <a class="botao" href="{{ url_for('relatorios') }}">Abrir</a>
+      </div>
+      {% endif %}
+    </div>
+  </main>
+{% endblock %}
