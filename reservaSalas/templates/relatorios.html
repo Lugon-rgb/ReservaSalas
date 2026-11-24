@@ -51,10 +51,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>F305</td><td>1</td><td>0</td><td>6</td><td>1</td><td>0</td><td>340</td></tr>
-            <tr><td>K210</td><td>2</td><td>0</td><td>9</td><td>2</td><td>3</td><td>760</td></tr>
-            <tr><td>L101</td><td>0</td><td>0</td><td>12</td><td>0</td><td>1</td><td>655</td></tr>
-            <tr><td>L104</td><td>1</td><td>1</td><td>8</td><td>3</td><td>2</td><td>590</td></tr>
+            {% for relatorio in relatorios %}
+            <tr><td>{{ salas_por_id[relatorio.sala_id] }}</td><td>{{ relatorio.confirmadas }}</td><td>{{ relatorio.em_uso }}</td><td>{{ relatorio.concluidas }}</td><td>{{ relatorio.faltas }}</td><td>{{ relatorio.canceladas }}</td><td>{{ relatorio.min_uso }}</td></tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>

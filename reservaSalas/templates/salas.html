@@ -13,19 +13,23 @@
               <label for="filtro-edificio">Edifício</label>
               <select id="filtro-edificio" name="filtro-edificio">
                 <option value="">Todos</option>
-                <option>Edifício Frings</option>
-                <option>Edifício Kennedy</option>
-                <option>Edifício Leme</option>
-                <option>Rio DataCentro (RDC)</option>
+                {% for edificio in edificios %}
+                  <option value="{{ edificio.nome }}" {% if edificio.nome == filtro_edificio %}selected{% endif %}>{{ edificio.nome }}</option>
+                {% endfor %}
               </select>
             </div>
             <div>
               <label for="filtro-andar">Andar</label>
               <select id="filtro-andar" name="filtro-andar">
-                <option value="">Todos</option>
-                <option value="-1">-1 subsolo</option>
-                <option value="0">0 Térreo</option>
-                <option value="1">1º andar</option>
+                <option value="" {% if filtro_andar is none %}selected{% endif %}>Todos</option>
+                {% for andar in andares %}
+                  <option value="{{ andar }}" {% if andar == filtro_andar %}selected{% endif %}>
+                    {% if andar < 0 %}{{ andar | abs }}º subsolo
+                    {% elif andar == 0 %}Térreo
+                    {% else %}{{ andar }}º andar
+                    {% endif %}
+                  </option>
+                {% endfor %}
               </select>
             </div>
             <div>
@@ -45,10 +49,14 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>F305</td><td>Edifício Frings, 3º andar</td><td>2</td><td>—</td></tr>
-            <tr><td>K210</td><td>Edifício Kennedy, 2º andar</td><td>8</td><td>Quadro branco, Projetor, Computador</td></tr>
-            <tr><td>L101</td><td>Edifício Leme, 1º andar</td><td>4</td><td>Quadro branco</td></tr>
-            <tr><td>L104</td><td>Edifício Leme, 1º andar</td><td>6</td><td>Quadro branco, TV</td></tr>
+            {% for sala in salas %}
+            <tr>
+              <td>{{ sala.nome }}</td>
+              <td>{{ sala.edificio.nome }}, {{ sala.andar }}º andar</td>
+              <td>{{ sala.capacidade }}</td>
+              <td>{% if sala.recursos %}{{ sala.recursos | join(", ") }}{% else %}-{% endif %}</td>
+            </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
@@ -56,51 +64,53 @@
 
     <section class="cartao">
       <h2>Cadastrar nova sala</h2>
-      <form action="{{ url_for('salas') }}" method="get">
+      <form action="{{ url_for('salas') }}" method="POST">
+        {{ form.hidden_tag() }}
         <div class="linha">
           <div>
-            <label for="codigo">Código</label>
-            <input type="text" id="codigo" name="codigo" placeholder="Ex.: L105" required>
+            {{ form.nome.label }}
+            {{ form.nome(id="codigo", placeholder="Ex.: L105") }}
+            {% for error in form.nome.errors %}
+              <span class="mensagem erro">{{ error }}</span>
+            {% endfor %}
           </div>
           <div>
-            <label for="capacidade">Capacidade</label>
-            <input type="number" id="capacidade" name="capacidade" min="2" required>
+            {{ form.capacidade.label }}
+            {{ form.capacidade(min="2") }}
+            {% for error in form.capacidade.errors %}
+              <span class="mensagem erro">{{ error }}</span>
+            {% endfor %}
           </div>
         </div>
 
-        <!-- localizacao -->
         <div class="linha">
           <div>
-            <label for="edificio">Edifício</label>
-            <select id="edificio" name="edificio" required>
-              <option value="">Escolha...</option>
-              <option>Edifício Frings</option>
-              <option>Edifício Kennedy</option>
-              <option>Edifício Leme</option>
-              <option>Rio DataCentro (RDC)</option>
-            </select>
+            {{ form.edificio_id.label }}
+            {{ form.edificio_id(id="edificio") }}
+            {% for error in form.edificio_id.errors %}
+              <span class="mensagem erro">{{ error }}</span>
+            {% endfor %}
           </div>
           <div>
-            <label for="andar">Andar</label>
-            <!-- pode contar andares de subsolo -->
-            <select id="andar" name="andar" required>
-              <option value="">Escolha...</option>
-                <option value="-1">-1 subsolo</option>
-                <option value="0">0 Térreo</option>
-                <option value="1">1º andar</option>
-            </select>
+            {{ form.andar.label }}
+            {{ form.andar(id="andar") }}
+            {% for error in form.andar.errors %}
+              <span class="mensagem erro">{{ error }}</span>
+            {% endfor %}
           </div>
         </div>
 
-        <label>Recursos</label>
+        {{ form.recursos.label }}
         <p>
-          <label class="opcao"><input type="checkbox" name="recursos" value="quadro"> Quadro branco</label>
-          <label class="opcao"><input type="checkbox" name="recursos" value="tv"> TV</label>
-          <label class="opcao"><input type="checkbox" name="recursos" value="projetor"> Projetor</label>
-          <label class="opcao"><input type="checkbox" name="recursos" value="computador"> Computadores</label>
+          {% for recurso in form.recursos %}
+            <label class="opcao">{{ recurso() }} {{ recurso.label.text }}</label>
+          {% endfor %}
+          {% for error in form.recursos.errors %}
+            <span class="mensagem erro">{{ error }}</span>
+          {% endfor %}
         </p>
 
-        <button type="submit" class="botao">Cadastrar sala</button>
+        {{ form.submit(class="botao") }}
       </form>
     </section>
 
@@ -115,10 +125,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>Edifício Frings</td><td>1</td></tr>
-            <tr><td>Edifício Kennedy</td><td>1</td></tr>
-            <tr><td>Edifício Leme</td><td>2</td></tr>
-            <tr><td>Rio DataCentro (RDC)</td><td>4</td></tr>
+            {% for edificio, count in edificios_com_contagem.items() %}
+            <tr><td>{{ edificio }}</td><td>{{ count }}</td></tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>

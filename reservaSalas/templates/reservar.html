@@ -27,20 +27,12 @@
             <!-- duas listas, hora e minuto -->
             <div class="linha" style="grid-template-columns: 1fr 1fr; gap: 0 8px;">
               <select id="inicio-hora" name="inicio-hora" required>
-                <option value="08">08h</option>
-                <option value="09">09h</option>
-                <option value="10" selected>10h</option>
-                <option value="11">11h</option>
-                <option value="12">12h</option>
-                <option value="13">13h</option>
-                <option value="14">14h</option>
-                <option value="15">15h</option>
-                <option value="16">16h</option>
-                <option value="17">17h</option>
-                <option value="18">18h</option>
-                <option value="19">19h</option>
-                <option value="20">20h</option>
-                <option value="21">21h</option>
+                {% for hora in range(8, 22) %}
+                  {% set hora_formatada = "%02d"|format(hora) %}
+                  <option value="{{ hora_formatada }}" {% if hora == 10 %}selected{% endif %}>
+                    {{ hora_formatada }}h
+                  </option>
+                {% endfor %}
               </select>
               <select id="inicio-minuto" name="inicio-minuto" required>
                 <option value="00" selected>00</option>
@@ -125,5 +117,4 @@
       <strong>LIMITE ATINGIDO:</strong> você já tem 2 reservas confirmadas. Cancele uma delas para reservar outra.
     </div>
   </main>
-{% endblock %
-}
+{% endblock %}
